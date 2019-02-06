@@ -1,28 +1,31 @@
-const createLoadComponent = scene => async path => {
-  const component = await import(`./components/${path}`);
+const createLoadComponent = scene => async componentName => {
+  const component = await import(`./components/${componentName}.js`);
 
   if (typeof component.default === "function") {
     component(scene);
   } else if (component.default && component.default.isObject3D) {
     scene.add(component.default);
   } else {
-    throw new Error(`Cannot load component ${path}`);
+    throw new Error(`Cannot load component ${componentName}`);
   }
 
   return component.update;
 };
 
 const initialize = async () => {
-  // Create scene
-  const renderer = await import("./renderer.js");
-  const scene = await import("./scene.js");
-  const camera = await import("./camera.js");
+  const components = await fetch("./components.json", {
+    headers: { "Content-Type": "application/json" }
+  }).then(res => res.json());
 
-  const componentPaths = ["box.js"];
+  // Create scene
+  const renderer = await import("./core/renderer.js");
+  const scene = await import("./core/scene.js");
+  const camera = await import("./core/camera.js");
 
   const loadComponent = createLoadComponent(scene.default);
+
   const componentUpdateFunctions = Array.from(
-    await Promise.all(componentPaths.map(loadComponent))
+    await Promise.all(components.map(loadComponent))
   ).filter(Boolean);
 
   const render = () => {
