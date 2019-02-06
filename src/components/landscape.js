@@ -10,9 +10,9 @@ class Landscape extends StaticComponent {
       side: THREE.DoubleSide
     });
 
-    const plane = new THREE.Mesh(geometry, material);
+    this.object = new THREE.Mesh(geometry, material);
 
-    plane.rotation.x = Math.PI / 2;
+    this.object.rotation.x = Math.PI / 2;
   }
 }
 
