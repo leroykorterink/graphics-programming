@@ -1,6 +1,33 @@
-var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+class Renderer {
+  constructor(scene, camera) {
+    this.updateSize = this.updateSize.bind(this);
 
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+    this.animationFrame = null;
 
-export default renderer;
+    this.scene = scene;
+    this.camera = camera;
+
+    this.webGLRenderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true
+    });
+
+    window.addEventListener("resize", this.updateSize);
+    this.updateSize();
+
+    document.body.appendChild(this.webGLRenderer.domElement);
+  }
+
+  updateSize() {
+    this.webGLRenderer.setSize(window.innerWidth, window.innerHeight);
+  }
+
+  render() {
+    this.scene.update();
+    this.camera.update();
+
+    this.webGLRenderer.render(this.scene.getScene(), this.camera.getCamera());
+  }
+}
+
+export default Renderer;

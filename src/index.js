@@ -1,49 +1,23 @@
-const createLoadComponent = scene => async componentName => {
-  const component = await import(`./components/${componentName}.js`);
+import Renderer from "./core/Renderer.js";
+import Scene from "./core/Scene.js";
+import Camera from "./core/Camera.js";
 
-  if (typeof component.default === "function") {
-    component(scene);
-  } else if (component.default && component.default.isObject3D) {
-    scene.add(component.default);
-  } else {
-    throw new Error(`Cannot load component ${componentName}`);
-  }
+import world1 from "./worlds/world1.js";
 
-  return component.update;
+const camera = new Camera();
+const scene = new Scene(world1);
+const renderer = new Renderer(scene, camera);
+
+const render = () => {
+  // Request new animation frame before rendering to avoid lag
+  requestAnimationFrame(render);
+
+  // Update camera controls
+  scene.update();
+
+  // Re-render scene
+  renderer.render();
 };
 
-const initialize = async () => {
-  const components = await fetch("./components.json", {
-    headers: { "Content-Type": "application/json" }
-  }).then(res => res.json());
-
-  // Create scene
-  const renderer = await import("./core/renderer.js");
-  const scene = await import("./core/scene.js");
-  const camera = await import("./core/camera.js");
-
-  const loadComponent = createLoadComponent(scene.default);
-
-  const componentUpdateFunctions = Array.from(
-    await Promise.all(components.map(loadComponent))
-  ).filter(Boolean);
-
-  const render = () => {
-    // Request new animation frame before rendering to avoid lag
-    requestAnimationFrame(render);
-
-    // Update camera controls
-    camera.controls.update();
-
-    // Update components
-    componentUpdateFunctions.forEach(f => f());
-
-    // Re-render scene
-    renderer.default.render(scene.default, camera.default);
-  };
-
-  // Start first render
-  render();
-};
-
-initialize();
+// Start first render
+render();
