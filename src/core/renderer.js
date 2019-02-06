@@ -19,6 +19,7 @@ class Renderer {
   }
 
   updateSize() {
+    this.webGLRenderer.setPixelRatio(window.devicePixelRatio);
     this.webGLRenderer.setSize(window.innerWidth, window.innerHeight);
   }
 

@@ -1,12 +1,15 @@
 import Renderer from "./core/Renderer.js";
 import Scene from "./core/Scene.js";
 import Camera from "./core/Camera.js";
+import Helpers from "./core/Helpers.js";
 
 import world1 from "./worlds/world1.js";
 
 const camera = new Camera();
 const scene = new Scene(world1);
 const renderer = new Renderer(scene, camera);
+
+new Helpers(renderer);
 
 const render = () => {
   // Request new animation frame before rendering to avoid lag

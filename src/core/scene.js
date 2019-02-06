@@ -8,7 +8,16 @@ class Scene {
     this.world = new THREE.Scene();
 
     // Add all components to scene
-    this.world.add(...components.map(component => component.object));
+    this.world.add(
+      ...components.reduce((accumulator, component) => {
+        accumulator.push(component.object);
+
+        // Add optional helper to list of components
+        if (component.helper) accumulator.push(component.helper);
+
+        return accumulator;
+      }, [])
+    );
   }
 
   addComponent(component) {
