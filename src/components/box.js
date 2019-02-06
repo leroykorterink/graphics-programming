@@ -2,7 +2,7 @@ var geometry = new THREE.BoxGeometry(1, 1, 1);
 var material = new THREE.MeshNormalMaterial({ color: 0x00ff00 });
 var cube = new THREE.Mesh(geometry, material);
 
-cube.position.y = (cube.scale.y / 2) + 0.001
+cube.position.y = cube.scale.y / 2 + 0.001;
 
 let velocity = -0.005;
 
