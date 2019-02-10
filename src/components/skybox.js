@@ -6,7 +6,7 @@ const directions = ["front", "back", "top", "bottom", "right", "left"];
 const createPath = direction => `assets/images/cloudtop_${direction}.png`;
 
 class Skybox extends StaticComponent {
-  constructor() {
+  constructor(scene) {
     super();
 
     const materials = directions.map(
@@ -20,7 +20,7 @@ class Skybox extends StaticComponent {
     const geometry = new THREE.CubeGeometry(SIZE, SIZE, SIZE);
     const material = new THREE.MeshFaceMaterial(materials);
 
-    this.object = new THREE.Mesh(geometry, material);
+    scene.add(new THREE.Mesh(geometry, material));
   }
 }
 

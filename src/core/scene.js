@@ -3,26 +3,20 @@ import AdvancedComponent from "./AdvancedComponent.js";
 class Scene {
   constructor(components) {
     // Save components for later reference
-    this.components = components || [];
-
     this.world = new THREE.Scene();
 
     // Add all components to scene
-    this.world.add(
-      ...components.reduce((accumulator, component) => {
-        accumulator.push(component.object);
-
-        // Add optional helper to list of components
-        if (component.helper) accumulator.push(component.helper);
-
-        return accumulator;
-      }, [])
+    this.components = components.reduce(
+      (accumulator, componentType) => [
+        ...accumulator,
+        new componentType(this.getScene())
+      ],
+      []
     );
   }
 
   addComponent(component) {
-    this.components.push(component);
-    this.world.add(component);
+    this.components.push(new component(this.getScene()));
   }
 
   getScene() {
