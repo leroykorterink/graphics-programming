@@ -1,26 +1,37 @@
 import StaticComponent from "../core/StaticComponent.js";
+import makeLoadTexture from "../util/makeLoadTexture.js";
 
 const SIZE = 1000;
 
 const directions = ["front", "back", "top", "bottom", "right", "left"];
-const createPath = direction => `assets/images/cloudtop_${direction}.png`;
+
+const loadTexture = makeLoadTexture(
+  direction => `assets/images/cloudtop_${direction}.png`
+);
 
 class Skybox extends StaticComponent {
   constructor(scene) {
     super();
+    this.createMesh(scene);
+  }
 
-    const materials = directions.map(
-      direction =>
-        new THREE.MeshBasicMaterial({
-          map: THREE.ImageUtils.loadTexture(createPath(direction)),
-          side: THREE.BackSide
-        })
+  async createMesh(scene) {
+    const materials = await Promise.all(
+      directions.map(
+        async direction =>
+          new THREE.MeshBasicMaterial({
+            map: await loadTexture(direction),
+            side: THREE.BackSide
+          })
+      )
     );
 
-    const geometry = new THREE.CubeGeometry(SIZE, SIZE, SIZE);
-    const material = new THREE.MeshFaceMaterial(materials);
+    const mesh = new THREE.Mesh(
+      new THREE.CubeGeometry(SIZE, SIZE, SIZE),
+      materials
+    );
 
-    scene.add(new THREE.Mesh(geometry, material));
+    scene.add(mesh);
   }
 }
 

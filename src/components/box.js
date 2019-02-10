@@ -5,7 +5,7 @@ class Box extends AdvancedComponent {
     super();
 
     var geometry = new THREE.BoxGeometry(1, 1, 1);
-    var material = new THREE.MeshNormalMaterial({ color: 0x00ff00 });
+    var material = new THREE.MeshNormalMaterial();
 
     this.velocity = -0.005;
     this.mesh = new THREE.Mesh(geometry, material);
