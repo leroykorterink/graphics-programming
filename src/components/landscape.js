@@ -8,7 +8,7 @@ class Landscape extends StaticComponent {
     const material = new THREE.MeshStandardMaterial({
       color: "#75AA8F",
       side: THREE.DoubleSide,
-      roughness: 0.75
+      roughness: 0.95
     });
     const mesh = new THREE.Mesh(geometry, material);
 

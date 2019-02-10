@@ -4,29 +4,42 @@ class Lighting extends AdvancedComponent {
   constructor(scene) {
     super();
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-    scene.add(ambientLight);
+    this.sun = this.createSun();
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(8, 12, 12);
-    directionalLight.castShadow = true;
+    this.ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 
-    directionalLight.shadow.camera.left = -25;
-    directionalLight.shadow.camera.right = 25;
-    directionalLight.shadow.camera.top = 25;
-    directionalLight.shadow.camera.bottom = -25;
+    scene.add(this.sun);
+    scene.add(this.ambientLight);
 
-    directionalLight.shadow.mapSize.width = 512; // default
-    directionalLight.shadow.mapSize.height = 512; // default
-    directionalLight.shadow.camera.near = 1; // default
-    directionalLight.shadow.camera.far = 50; // default
-
-    scene.add(directionalLight);
-    scene.add(new THREE.DirectionalLightHelper(directionalLight));
-    scene.add(new THREE.CameraHelper(directionalLight.shadow.camera));
+    // Helpers
+    scene.add(new THREE.DirectionalLightHelper(this.sun));
+    scene.add(new THREE.CameraHelper(this.sun.shadow.camera));
   }
 
-  update() {}
+  createSun() {
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(8, 25, 25);
+    directionalLight.castShadow = true;
+
+    directionalLight.shadow.camera.left = -50;
+    directionalLight.shadow.camera.right = 50;
+    directionalLight.shadow.camera.top = 50;
+    directionalLight.shadow.camera.bottom = -50;
+
+    directionalLight.shadow.mapSize.width = 1920; // default
+    directionalLight.shadow.mapSize.height = 1080; // default
+    directionalLight.shadow.camera.near = 1; // default
+    directionalLight.shadow.camera.far = 100; // default
+
+    return directionalLight;
+  }
+
+  update() {
+    const matrix = new THREE.Matrix4();
+    matrix.makeRotationY(0.0005);
+
+    this.sun.position.applyMatrix4(matrix);
+  }
 }
 
 export default Lighting;

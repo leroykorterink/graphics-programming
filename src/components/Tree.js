@@ -47,7 +47,7 @@ class Tree extends StaticComponent {
     const mesh = new THREE.Mesh(geometry, material);
 
     mesh.setRotationFromEuler(
-      new THREE.Euler(getRandomClamped(), 0, getRandomClamped())
+      new THREE.Euler(getRandomClamped(0, 1), 0, getRandomClamped(0, 1))
     );
 
     mesh.position.y += 6;
