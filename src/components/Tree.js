@@ -19,15 +19,18 @@ class Tree extends StaticComponent {
   }
 
   createTrunk() {
-    const geometry = new THREE.CylinderGeometry(0.25, 0.25, 6, 6, 2, true);
+    const geometry = new THREE.CylinderGeometry(0.25, 0.25, 6, 4, 2, true);
     const material = new THREE.MeshLambertMaterial({
       color: "#382C21"
     });
+
+    material.flatShading = true;
 
     const mesh = new THREE.Mesh(geometry, material);
 
     mesh.position.y += 3;
     mesh.castShadow = true; //default is false
+    mesh.receiveShadow = true; //default is false
 
     return mesh;
   }
@@ -37,6 +40,7 @@ class Tree extends StaticComponent {
     const material = new THREE.MeshLambertMaterial({
       color: "#008040"
     });
+    material.flatShading = true;
 
     geometry.scale(
       getRandomClamped(0.6, 1),
@@ -50,7 +54,7 @@ class Tree extends StaticComponent {
       new THREE.Euler(getRandomClamped(0, 1), 0, getRandomClamped(0, 1))
     );
 
-    mesh.position.y += 6;
+    mesh.position.y += 5;
     mesh.castShadow = true; //default is false
 
     return mesh;
