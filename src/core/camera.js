@@ -25,10 +25,12 @@ class Camera {
     document.addEventListener("keydown", this.handleKeydown);
     document.addEventListener("keyup", this.handleKeyup);
 
-    document.addEventListener("click", clickEvent => {
-      if (clickEvent.target.nodeName !== "CANVAS") return;
-
-      document.addEventListener("mousemove", this.handleMouseMove);
+    document.addEventListener("pointerlockchange", event => {
+      if (document.pointerLockElement) {
+        document.addEventListener("mousemove", this.handleMouseMove);
+      } else {
+        document.removeEventListener("mousemove", this.handleMouseMove);
+      }
     });
   }
 
@@ -66,11 +68,6 @@ class Camera {
 
       case "e":
         this.velocity.setY(-1 * TRANLATE_SPEED);
-        break;
-
-      // Disable camera rotation when escape key is pressed
-      case "Escape":
-        document.removeEventListener("mousemove", this.handleMouseMove);
         break;
     }
   }
