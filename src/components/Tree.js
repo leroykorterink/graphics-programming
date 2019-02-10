@@ -1,35 +1,60 @@
 import StaticComponent from "../core/StaticComponent.js";
+import Trees from "./Forest.js";
 
 const getRandomClamped = (min = 0.7, max = 1) =>
   Math.random() * (max - min) + min;
 
-const TreeFactory = (
-  minWidth = 4,
-  maxWidth = 6,
-  minHeight = 10,
-  maxHeight = 12
-) =>
-  class extends StaticComponent {
-    constructor(scene) {
-      super();
+class Tree extends StaticComponent {
+  constructor(scene) {
+    super();
 
-      const width = Math.random() * (maxWidth - minWidth) + minWidth;
-      const height = Math.random() * (maxHeight - minHeight) + minHeight;
+    const leaves = this.createLeaves();
+    const trunk = this.createTrunk();
 
-      const material = new THREE.MeshLambertMaterial({
-        color: 0x1a6e24,
-        emissive: 0x2d5521
-      });
-      const geometry = new THREE.CylinderGeometry(0, width, height, 15, 5);
+    const tree = new THREE.Group();
+    tree.add(trunk);
+    tree.add(leaves);
 
-      geometry.vertices.forEach(vertice => {
-        vertice.x = vertice.x * getRandomClamped();
-        vertice.y = vertice.y * getRandomClamped();
-        vertice.z = vertice.z * getRandomClamped();
-      });
+    scene.add(tree);
+  }
 
-      scene.add(new THREE.Mesh(geometry, material));
-    }
-  };
+  createTrunk() {
+    const geometry = new THREE.CylinderGeometry(0.25, 0.25, 6, 6, 2, true);
+    const material = new THREE.MeshLambertMaterial({
+      color: "#382C21"
+    });
 
-export default TreeFactory;
+    const mesh = new THREE.Mesh(geometry, material);
+
+    mesh.position.y += 3;
+    mesh.castShadow = true; //default is false
+
+    return mesh;
+  }
+
+  createLeaves() {
+    const geometry = new THREE.IcosahedronGeometry(4, 0);
+    const material = new THREE.MeshLambertMaterial({
+      color: "#008040"
+    });
+
+    geometry.scale(
+      getRandomClamped(0.6, 1),
+      getRandomClamped(0.3, 0.6),
+      getRandomClamped(0.6, 1)
+    );
+
+    const mesh = new THREE.Mesh(geometry, material);
+
+    mesh.setRotationFromEuler(
+      new THREE.Euler(getRandomClamped(), 0, getRandomClamped())
+    );
+
+    mesh.position.y += 6;
+    mesh.castShadow = true; //default is false
+
+    return mesh;
+  }
+}
+
+export default Tree;

@@ -46,28 +46,34 @@ class Camera {
 
   handleKeydown(keydownEvent) {
     switch (keydownEvent.key) {
+      case "W":
       case "w":
         this.velocity.setZ(-1 * TRANLATE_SPEED);
         break;
 
+      case "A":
       case "a":
         this.velocity.setX(-1 * TRANLATE_SPEED);
         break;
 
+      case "S":
       case "s":
         this.velocity.setZ(1 * TRANLATE_SPEED);
         break;
 
+      case "D":
       case "d":
         this.velocity.setX(1 * TRANLATE_SPEED);
         break;
 
+      case "Q":
       case "q":
-        this.velocity.setY(1 * TRANLATE_SPEED);
+        this.velocity.setY(-1 * TRANLATE_SPEED);
         break;
 
+      case "E":
       case "e":
-        this.velocity.setY(-1 * TRANLATE_SPEED);
+        this.velocity.setY(1 * TRANLATE_SPEED);
         break;
     }
   }
