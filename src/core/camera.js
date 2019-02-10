@@ -1,5 +1,7 @@
 import AdvancedComponent from "./AdvancedComponent.js";
 
+const HALF_CIRCLE = Math.PI / 2;
+
 const TRANLATE_SPEED = 0.1;
 const ROTATE_SPEED = 0.001;
 
@@ -97,13 +99,16 @@ class Camera {
   }
 
   handleMouseMove(mousemoveEvent) {
-    this.camera.rotation.x =
+    const newY =
+      this.camera.rotation.y + -mousemoveEvent.movementX * ROTATE_SPEED;
+    const newX =
       this.camera.rotation.x + -mousemoveEvent.movementY * ROTATE_SPEED;
 
-    this.camera.rotation.y =
-      this.camera.rotation.y + -mousemoveEvent.movementX * ROTATE_SPEED;
-
-    this.camera.rotation.z = 0;
+    this.camera.rotation.y = newY;
+    this.camera.rotation.x = Math.min(
+      HALF_CIRCLE,
+      Math.max(-HALF_CIRCLE, newX)
+    );
   }
 }
 
