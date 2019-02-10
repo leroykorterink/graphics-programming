@@ -1,5 +1,3 @@
-import AdvancedComponent from "./AdvancedComponent.js";
-
 const HALF_CIRCLE = Math.PI / 2;
 
 const TRANLATE_SPEED = 0.1;
