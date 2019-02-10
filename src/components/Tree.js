@@ -42,13 +42,14 @@ class Tree extends StaticComponent {
     });
     material.flatShading = true;
 
-    geometry.scale(
-      getRandomClamped(0.6, 1),
+    var matrix = new THREE.Matrix4();
+    matrix.makeScale(
+      getRandomClamped(0.6, 0.8),
       getRandomClamped(0.3, 0.6),
-      getRandomClamped(0.6, 1)
+      getRandomClamped(0.6, 0.8)
     );
 
-    const mesh = new THREE.Mesh(geometry, material);
+    const mesh = new THREE.Mesh(geometry.applyMatrix(matrix), material);
 
     mesh.setRotationFromEuler(
       new THREE.Euler(getRandomClamped(0, 1), 0, getRandomClamped(0, 1))
