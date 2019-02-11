@@ -26,8 +26,8 @@ class Lighting extends AdvancedComponent {
     directionalLight.shadow.camera.top = 50;
     directionalLight.shadow.camera.bottom = -50;
 
-    directionalLight.shadow.mapSize.width = 1920; // default
-    directionalLight.shadow.mapSize.height = 1080; // default
+    directionalLight.shadow.mapSize.width = 6000; // default
+    directionalLight.shadow.mapSize.height = 6000; // default
     directionalLight.shadow.camera.near = 1; // default
     directionalLight.shadow.camera.far = 100; // default
 

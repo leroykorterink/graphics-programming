@@ -19,7 +19,7 @@ class Tree extends StaticComponent {
   }
 
   createTrunk() {
-    const geometry = new THREE.CylinderGeometry(0.25, 0.25, 6, 4, 2, true);
+    const geometry = new THREE.CylinderGeometry(0.25, 0.25, 6, 8, 2, true);
     const material = new THREE.MeshLambertMaterial({
       color: "#382C21"
     });
