@@ -6,7 +6,7 @@ const SIZE = 1000;
 const directions = ["front", "back", "top", "bottom", "right", "left"];
 
 const loadTexture = makeLoadTexture(
-  direction => `assets/images/cloudtop_${direction}.png`
+  direction => `assets/Skybox/cloudtop_${direction}.png`
 );
 
 class Skybox extends StaticComponent {

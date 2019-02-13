@@ -20,8 +20,11 @@ class Tree extends StaticComponent {
 
   createTrunk() {
     const geometry = new THREE.CylinderGeometry(0.25, 0.25, 6, 8, 2, true);
-    const material = new THREE.MeshLambertMaterial({
-      color: "#382C21"
+    const material = new THREE.MeshStandardMaterial({
+      color: "#382C21",
+      roughness: 1,
+      metalness: 0.1,
+      flatShading: true
     });
 
     material.flatShading = true;
@@ -37,10 +40,12 @@ class Tree extends StaticComponent {
 
   createLeaves() {
     const geometry = new THREE.IcosahedronGeometry(4, 0);
-    const material = new THREE.MeshLambertMaterial({
-      color: "#008040"
+    const material = new THREE.MeshStandardMaterial({
+      color: "#008040",
+      roughness: 1,
+      metalness: 0.1,
+      flatShading: true
     });
-    material.flatShading = true;
 
     var matrix = new THREE.Matrix4();
     matrix.makeScale(
