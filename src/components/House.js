@@ -1,5 +1,4 @@
 import AdvancedComponent from "../core/AdvancedComponent.js";
-import Smoke from "../components/Smoke.js";
 
 const House = (
   wallsWidth = 5,
