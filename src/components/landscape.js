@@ -5,14 +5,17 @@ class Landscape extends StaticComponent {
     super();
 
     const geometry = new THREE.PlaneGeometry(50, 50, 30);
-    const material = new THREE.MeshBasicMaterial({
-      color: 0xffff00,
-      side: THREE.DoubleSide
+    const material = new THREE.MeshStandardMaterial({
+      color: "#75AA8F",
+      side: THREE.DoubleSide,
+      roughness: 0.95
     });
+    const mesh = new THREE.Mesh(geometry, material);
 
-    this.object.rotation.x = Math.PI / 2;
+    mesh.receiveShadow = true;
+    mesh.rotation.x = Math.PI / 2;
 
-    scene.add(new THREE.Mesh(geometry, material));
+    scene.add(mesh);
   }
 }
 

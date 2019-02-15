@@ -1,4 +1,4 @@
-import AdvancedComponent from "./AdvancedComponent.js";
+const HALF_CIRCLE = Math.PI / 2;
 
 const TRANLATE_SPEED = 0.1;
 const ROTATE_SPEED = 0.001;
@@ -25,10 +25,12 @@ class Camera {
     document.addEventListener("keydown", this.handleKeydown);
     document.addEventListener("keyup", this.handleKeyup);
 
-    document.addEventListener("click", clickEvent => {
-      if (clickEvent.target.nodeName !== "CANVAS") return;
-
-      document.addEventListener("mousemove", this.handleMouseMove);
+    document.addEventListener("pointerlockchange", event => {
+      if (document.pointerLockElement) {
+        document.addEventListener("mousemove", this.handleMouseMove);
+      } else {
+        document.removeEventListener("mousemove", this.handleMouseMove);
+      }
     });
   }
 
@@ -44,33 +46,34 @@ class Camera {
 
   handleKeydown(keydownEvent) {
     switch (keydownEvent.key) {
+      case "W":
       case "w":
         this.velocity.setZ(-1 * TRANLATE_SPEED);
         break;
 
+      case "A":
       case "a":
         this.velocity.setX(-1 * TRANLATE_SPEED);
         break;
 
+      case "S":
       case "s":
         this.velocity.setZ(1 * TRANLATE_SPEED);
         break;
 
+      case "D":
       case "d":
         this.velocity.setX(1 * TRANLATE_SPEED);
         break;
 
+      case "Q":
       case "q":
-        this.velocity.setY(1 * TRANLATE_SPEED);
-        break;
-
-      case "e":
         this.velocity.setY(-1 * TRANLATE_SPEED);
         break;
 
-      // Disable camera rotation when escape key is pressed
-      case "Escape":
-        document.removeEventListener("mousemove", this.handleMouseMove);
+      case "E":
+      case "e":
+        this.velocity.setY(1 * TRANLATE_SPEED);
         break;
     }
   }
@@ -97,13 +100,16 @@ class Camera {
   }
 
   handleMouseMove(mousemoveEvent) {
-    this.camera.rotation.x =
+    const newY =
+      this.camera.rotation.y + -mousemoveEvent.movementX * ROTATE_SPEED;
+    const newX =
       this.camera.rotation.x + -mousemoveEvent.movementY * ROTATE_SPEED;
 
-    this.camera.rotation.y =
-      this.camera.rotation.y + -mousemoveEvent.movementX * ROTATE_SPEED;
-
-    this.camera.rotation.z = 0;
+    this.camera.rotation.y = newY;
+    this.camera.rotation.x = Math.min(
+      HALF_CIRCLE,
+      Math.max(-HALF_CIRCLE, newX)
+    );
   }
 }
 

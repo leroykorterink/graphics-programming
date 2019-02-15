@@ -13,6 +13,10 @@ class Renderer {
       alpha: true
     });
 
+    // Enable shadows
+    this.webGLRenderer.shadowMap.enabled = true;
+    this.webGLRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
     window.addEventListener("resize", this.updateSize);
     this.updateSize();
 
