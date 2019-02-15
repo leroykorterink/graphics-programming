@@ -22,11 +22,12 @@ const PineFactory = position =>
 
     createTrunk(tree) {
       const geometry = new THREE.CylinderGeometry(0.25, 0.25, 1, 8, 2, true);
-      const material = new THREE.MeshLambertMaterial({
-        color: "#382C21"
+      const material = new THREE.MeshStandardMaterial({
+        color: "#382C21",
+        roughness: 1,
+        metalness: 0.1,
+        flatShading: true
       });
-
-      material.flatShading = true;
 
       const mesh = new THREE.Mesh(geometry, material);
 
@@ -40,8 +41,11 @@ const PineFactory = position =>
     createLeaves(tree) {
       const segments = 5;
 
-      const material = new THREE.MeshLambertMaterial({
-        color: "#008040"
+      const material = new THREE.MeshStandardMaterial({
+        color: "#008040",
+        roughness: 0.75,
+        metalness: 0.3,
+        flatShading: true
       });
 
       for (let index = 0; index < segments - 1; index++) {

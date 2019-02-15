@@ -1,15 +1,31 @@
 import StaticComponent from "../core/StaticComponent.js";
+import makeLoadTexture from "../util/makeLoadTexture.js";
+
+const SIZE = 50;
+
+const loadTexture = makeLoadTexture(fileName => `assets/Landscape/${fileName}`);
 
 class Landscape extends StaticComponent {
   constructor(scene) {
     super();
 
-    const geometry = new THREE.PlaneGeometry(50, 50, 30);
+    this.init(scene);
+  }
+
+  async init(scene) {
+    const landscapeNormal = await loadTexture("landscape_normal.png");
+    landscapeNormal.wrapS = landscapeNormal.wrapT = THREE.RepeatWrapping;
+    landscapeNormal.repeat.set(SIZE, SIZE);
+
+    const geometry = new THREE.PlaneGeometry(SIZE, SIZE, 0);
     const material = new THREE.MeshStandardMaterial({
-      color: "#75AA8F",
       side: THREE.DoubleSide,
-      roughness: 0.95
+      color: "#193811",
+      roughness: 0.95,
+      metalness: 0.4,
+      normalMap: landscapeNormal
     });
+
     const mesh = new THREE.Mesh(geometry, material);
 
     mesh.receiveShadow = true;
