@@ -8,14 +8,76 @@
         margin: 0;
         padding: 0;
         overflow: hidden;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .controls {
+        position: fixed;
+        background: rgba(255, 255, 255, 0.5);
+        width: 200px;
+      }
+
+      .controls summary,
+      .controls section {
+        padding: 15px;
+      }
+
+      .controls section button {
+        width: 100%;
+        display: block;
+      }
+
+      .controls section table {
+        margin-top: 10px;
+      }
+
+      .controls section td:first-child {
+        font-weight: bold;
       }
     </style>
   </head>
   <body>
-    <button id="toggleDebug" style="position: fixed;">Toggle debug</button>
+    <details class="controls">
+      <summary>Handleiding</summary>
+
+      <section>
+        <button id="toggleDebug">Toggle debug</button>
+
+        <table>
+          <tr>
+            <td>W</td>
+            <td>Vooruit</td>
+          </tr>
+          <tr>
+            <td>A</td>
+            <td>Links</td>
+          </tr>
+          <tr>
+            <td>S</td>
+            <td>Achteruit</td>
+          </tr>
+          <tr>
+            <td>D</td>
+            <td>Rechts</td>
+          </tr>
+          <tr>
+            <td>Q</td>
+            <td>Naar beneden</td>
+          </tr>
+          <tr>
+            <td>E</td>
+            <td>Naar boven</td>
+          </tr>
+        </table>
+
+        <p>
+          Klik op de pagina om rond te kijken met de muis
+        </p>
+      </section>
+    </details>
 
     <script src="three/three.js"></script>
-    <script src="three/OrbitControls.js"></script>
+    <script src="three/OBJLoader.js"></script>
     <script type="module" src="index.js"></script>
   </body>
 </html>

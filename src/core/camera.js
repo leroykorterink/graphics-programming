@@ -81,18 +81,24 @@ class Camera {
   handleKeyup(keyupEvent) {
     switch (keyupEvent.key) {
       case "s":
+      case "S":
       case "w":
+      case "W":
         this.velocity.setZ(0);
         break;
 
       case "a":
+      case "A":
       case "d":
+      case "D":
         this.velocity.setX(0);
         this.velocity.setX(0);
         break;
 
       case "q":
+      case "Q":
       case "e":
+      case "E":
         this.velocity.setY(0);
         this.velocity.setY(0);
         break;

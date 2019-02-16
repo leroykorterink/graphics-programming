@@ -4,6 +4,7 @@ import Tree from "../components/Tree.js";
 import House from "../components/House.js";
 import Pine from "../components/Pine.js";
 import Lighting from "../components/Lighting.js";
+import Mill from "../components/Mill.js";
 
 export default [
   //
@@ -13,4 +14,5 @@ export default [
   Pine(new THREE.Vector3(5, 0, 5)),
   Skybox,
   House(),
+  Mill
 ];
