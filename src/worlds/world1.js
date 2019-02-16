@@ -14,5 +14,5 @@ export default [
   Pine(new THREE.Vector3(5, 0, 5)),
   Skybox,
   House(),
-  Mill
+  Mill(4, 4, 45)
 ];

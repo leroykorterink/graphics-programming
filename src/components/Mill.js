@@ -3,23 +3,36 @@ import makeObjLoader from "../util/makeObjLoader.js";
 
 const loadObj = makeObjLoader(fileName => `assets/Mill/${fileName}`);
 
-class Landscape extends StaticComponent {
-  constructor(scene) {
-    super();
+export default (x, z, alpha) =>
+  class Landscape extends StaticComponent {
+    constructor(scene) {
+      super();
 
-    this.init(scene);
-  }
+      this.init(scene);
+    }
 
-  async init(scene) {
-    const mesh = (await loadObj("mill_model.obj")).children[2];
+    async init(scene) {
+      const mesh = (await loadObj("mill_model.obj")).children[2];
 
-    let matrix = new THREE.Matrix4();
-    matrix.scale(0.08, 0.08, 0.08);
+      // Decrease scale
+      var scaleMatrix = new THREE.Matrix4().makeScale(0.08, 0.08, 0.08);
+      mesh.geometry.applyMatrix(scaleMatrix);
 
-    mesh.applyMatrix(matrix);
+      // Move mesh to y 0
+      mesh.geometry.computeBoundingBox();
+      const boundingBox = mesh.geometry.boundingBox;
 
-    scene.add(mesh);
-  }
-}
+      const translateMatrix = new THREE.Matrix4();
+      translateMatrix.makeTranslation(x, -boundingBox.min.y, z);
 
-export default Landscape;
+      mesh.geometry.applyMatrix(translateMatrix);
+
+      // Rotate mesh
+      const rotationMatrix = new THREE.Matrix4();
+      rotationMatrix.makeRotationY(alpha);
+      mesh.applyMatrix(rotationMatrix);
+
+      // Add mesh to scene
+      scene.add(mesh);
+    }
+  };

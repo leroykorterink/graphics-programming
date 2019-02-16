@@ -1,6 +1,5 @@
 const HALF_CIRCLE = Math.PI / 2;
 
-const TRANLATE_SPEED = 0.1;
 const ROTATE_SPEED = 0.001;
 
 class Camera {
@@ -10,6 +9,7 @@ class Camera {
     this.handleMouseMove = this.handleMouseMove.bind(this);
 
     this.velocity = new THREE.Vector3();
+    this.velocityScale = 0.1;
 
     this.camera = new THREE.PerspectiveCamera(
       75, // fov — Camera frustum vertical field of view.
@@ -22,8 +22,20 @@ class Camera {
     this.camera.rotation.order = "YXZ";
     this.camera.position.set(0, 3, 3);
 
+    // Event handlers
+    const speedIndicator = document.querySelector(".speedIndicator");
+
     document.addEventListener("keydown", this.handleKeydown);
     document.addEventListener("keyup", this.handleKeyup);
+
+    document.addEventListener("wheel", wheelEvent => {
+      this.velocityScale = Math.min(
+        0.5,
+        Math.max(0.05, this.velocityScale + -(wheelEvent.deltaY / 10000))
+      );
+
+      speedIndicator.innerHTML = Math.trunc(this.velocityScale * 100);
+    });
 
     document.addEventListener("pointerlockchange", event => {
       if (document.pointerLockElement) {
@@ -48,32 +60,32 @@ class Camera {
     switch (keydownEvent.key) {
       case "W":
       case "w":
-        this.velocity.setZ(-1 * TRANLATE_SPEED);
+        this.velocity.setZ(-1 * this.velocityScale);
         break;
 
       case "A":
       case "a":
-        this.velocity.setX(-1 * TRANLATE_SPEED);
+        this.velocity.setX(-1 * this.velocityScale);
         break;
 
       case "S":
       case "s":
-        this.velocity.setZ(1 * TRANLATE_SPEED);
+        this.velocity.setZ(1 * this.velocityScale);
         break;
 
       case "D":
       case "d":
-        this.velocity.setX(1 * TRANLATE_SPEED);
+        this.velocity.setX(1 * this.velocityScale);
         break;
 
       case "Q":
       case "q":
-        this.velocity.setY(-1 * TRANLATE_SPEED);
+        this.velocity.setY(-1 * this.velocityScale);
         break;
 
       case "E":
       case "e":
-        this.velocity.setY(1 * TRANLATE_SPEED);
+        this.velocity.setY(1 * this.velocityScale);
         break;
     }
   }
