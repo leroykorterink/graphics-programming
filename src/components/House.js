@@ -4,6 +4,8 @@ import makeLoadTexture from "../util/makeLoadTexture.js";
 const loadTexture = makeLoadTexture(fileName => `assets/House/${fileName}`);
 
 const House = (
+  position,
+  theta = 0,
   wallsWidth = 5,
   wallsHeight = 4,
   wallsDepth = 5,
@@ -28,7 +30,14 @@ const House = (
       group.add(roof);
       group.add(chimney);
 
-      group.position.set(0, 2, -10);
+      group.children[0].geometry.computeBoundingBox();
+
+      group.position.set(
+        position.x,
+        group.children[0].geometry.boundingBox.max.y + position.y,
+        position.z
+      );
+      group.rotateY(theta);
 
       scene.add(group);
     }
