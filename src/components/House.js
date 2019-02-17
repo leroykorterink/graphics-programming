@@ -119,20 +119,29 @@ const House = (
 
     async createDormer(wallsHeight, roofHeight) {
 
-      const dormerMaterial = new THREE.MeshLambertMaterial({
-        color: 0x222222
-      });
+      const dormerWindowTexture = await loadTexture("window_texture.png");
+      const sideWinowTexture = new THREE.MeshBasicMaterial( { color: 0x353535 } );            
+
+      const dormerMaterial = [                                                      
+        sideWinowTexture,
+        sideWinowTexture,
+        sideWinowTexture,
+        sideWinowTexture,
+        new THREE.MeshStandardMaterial( { map: dormerWindowTexture } ),                      
+        sideWinowTexture,
+      ];     
+
       const dormerRoofMaterial = new THREE.MeshLambertMaterial({
-        color: 0x8a8a8a
+        color: 0x353535
       });
 
-      const dormer = new THREE.BoxBufferGeometry(1.7, 1.4, 2);
+      const dormer = new THREE.BoxBufferGeometry(1.4, 1.4, 2);
       const dormerMesh = new THREE.Mesh(dormer, dormerMaterial);
-      dormerMesh.position.set(0, -0.5, 0);
+      dormerMesh.position.set(0, -0.4, 0);
 
-      const dormerRoof = new THREE.BoxBufferGeometry(1.9, 0.2, 2.2);
+      const dormerRoof = new THREE.BoxBufferGeometry(1.6, 0.2, 2.2);
       const dormerRoofMesh = new THREE.Mesh(dormerRoof, dormerRoofMaterial);
-      dormerRoofMesh.position.set(0, 0.3, 0);
+      dormerRoofMesh.position.set(0, 0.4, 0);
 
 
       const dormerGroup = new THREE.Group();
