@@ -21,12 +21,14 @@ const House = (
       const walls = await this.createWalls(wallsWidth, wallsHeight, wallsDepth);
       const roof = await this.createRoof(roofHeight, roofOverhead, wallsHeight);
       const chimney = await this.createChimney(wallsHeight, roofHeight);
+      const dormer = await this.createDormer(wallsHeight, roofHeight);
 
       const group = new THREE.Group();
 
       group.add(walls);
       group.add(roof);
       group.add(chimney);
+      group.add(dormer);
 
       group.position.set(0, 2, -10);
 
@@ -115,6 +117,37 @@ const House = (
       return chimneyGroup;
     }
 
+    async createDormer(wallsHeight, roofHeight) {
+
+      const dormerMaterial = new THREE.MeshLambertMaterial({
+        color: 0x222222
+      });
+      const dormerRoofMaterial = new THREE.MeshLambertMaterial({
+        color: 0x8a8a8a
+      });
+
+      const dormer = new THREE.BoxBufferGeometry(1.7, 1.4, 2);
+      const dormerMesh = new THREE.Mesh(dormer, dormerMaterial);
+      dormerMesh.position.set(0, -0.5, 0);
+
+      const dormerRoof = new THREE.BoxBufferGeometry(1.9, 0.2, 2.2);
+      const dormerRoofMesh = new THREE.Mesh(dormerRoof, dormerRoofMaterial);
+      dormerRoofMesh.position.set(0, 0.3, 0);
+
+
+      const dormerGroup = new THREE.Group();
+      dormerGroup.add(dormerMesh);
+      dormerGroup.add(dormerRoofMesh);
+
+      dormerGroup.castShadow = true;
+      dormerGroup.receiveShadow = true;
+
+      dormerGroup.position.set(0, wallsHeight / 2 + roofHeight / 2, 1.5);
+
+      return dormerGroup;
+    }
+
+
     smokeFactory() {
       this.smokeMaterial = new THREE.MeshLambertMaterial({
         color: 0xffffff,
@@ -130,6 +163,7 @@ const House = (
 
       return this.smokeMesh;
     }
+
 
     update() {
       if (!this.smokeMaterial || !this.smokeMesh || !this.normalMap) {
