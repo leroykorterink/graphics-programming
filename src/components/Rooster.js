@@ -4,7 +4,7 @@ import makeLoadTexture from "../util/makeLoadTexture.js";
 
 const loadFBX = makeFBXLoader(fileName => `assets/Rooster/${fileName}`);
 
-export default (position, angle = 0) =>
+export default (position, angle = 45) =>
   class Rock extends StaticComponent {
     constructor(scene) {
       super();
@@ -17,13 +17,14 @@ export default (position, angle = 0) =>
       const mesh = group.children[0];
 
       mesh.material = new THREE.MeshStandardMaterial({
-        color: "#ffffff",
+        color: "#E38640",
         roughness: 1,
         metalness: 0.1,
         flatShading: true
       });
 
-      // Add mesh to scene
+      mesh.translateZ(-100);
+
       scene.add(mesh);
     }
   };

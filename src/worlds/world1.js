@@ -29,7 +29,7 @@ export default [
 
   // Mill section
   Mill(new THREE.Vector3(12, 0, 10), 35),
-  Rooster(new THREE.Vector3()),
+  Rooster(new THREE.Vector3(-5, 0.25, 5), 165),
   CampFire(new THREE.Vector3(-1.5, 0, 9)),
 
   // Forest
