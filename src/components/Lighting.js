@@ -6,14 +6,10 @@ class Lighting extends AdvancedComponent {
 
     this.sun = this.createSun();
 
-    this.ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    this.ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 
     scene.add(this.sun);
     scene.add(this.ambientLight);
-
-    // Helpers
-    // scene.add(new THREE.DirectionalLightHelper(this.sun));
-    // scene.add(new THREE.CameraHelper(this.sun.shadow.camera));
   }
 
   createSun() {
