@@ -15,10 +15,10 @@ export default position =>
       const mesh = (await loadFBX("camp_fire_model.fbx")).children[0];
 
       // Decrease specularity
-      mesh.material.specular = new THREE.Color(0.2, 0.2, 0.2);
+      mesh.material.specular = new THREE.Color(0.1, 0.1, 0.1);
 
       // Scale down and move to right position
-      mesh.applyMatrix(new THREE.Matrix4().makeScale(0.008, 0.008, 0.008));
+      mesh.applyMatrix(new THREE.Matrix4().makeScale(0.005, 0.005, 0.005));
 
       mesh.geometry.computeBoundingBox();
 
@@ -27,7 +27,7 @@ export default position =>
       mesh.translateZ(-mesh.geometry.boundingBox.min.z + position.y);
 
       this.createFire(mesh);
-
+      
       // Add mesh to scene
       scene.add(mesh);
     }
@@ -45,9 +45,9 @@ export default position =>
       }
 
       var fireMaterial = new THREE.PointsMaterial({
-        color: "orange",
+        color: "#ffbb8a",
         transparent: true,
-        opacity: 0.75,
+        opacity: 0.35,
         size: 0.05
       });
 
@@ -55,12 +55,20 @@ export default position =>
 
       mesh.add(this.fire);
 
+      this.light = new THREE.PointLight("#E38C40", 5, 50, 5);
+
+      mesh.add(new THREE.PointLightHelper(this.light));
+
       // create the particle system
-      mesh.add(new THREE.PointLight("orange", 1, 100, 5));
+      mesh.add(this.light);
     }
 
     update() {
       if (!this.fire) return;
+
+      this.light.position.setX(-8.25);
+      this.light.position.setZ(-0.5);
+      this.light.position.setY(5);
 
       this.fire.geometry.vertices.forEach(vertice => {
         const displacementRatio = Math.abs(vertice.z * 0.00175) + 1;

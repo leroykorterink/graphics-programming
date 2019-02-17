@@ -42,6 +42,9 @@ export default position =>
         child.castShadow = true;
       });
 
+      mesh.receiveShadow = true;
+      mesh.castShadow = true;
+
       mesh.applyMatrix(new THREE.Matrix4().makeScale(5, 3, 5));
 
       mesh.geometry.computeBoundingBox();
