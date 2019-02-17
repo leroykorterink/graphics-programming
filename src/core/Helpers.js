@@ -15,8 +15,6 @@ class Helpers {
     document
       .querySelector("#toggleDebug")
       .addEventListener("click", this.toggleDebug);
-
-    this.toggleDebug();
   }
 
   toggleDebug() {

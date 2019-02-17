@@ -20,7 +20,8 @@ class Camera {
 
     // Set rotation order to YXZ since rotation is not commutative
     this.camera.rotation.order = "YXZ";
-    this.camera.position.set(0, 3, 3);
+    this.camera.position.set(11, 3.5, -8);
+    this.camera.lookAt(8, 3, 4);
 
     // Event handlers
     const speedIndicator = document.querySelector(".speedIndicator");
