@@ -57,9 +57,6 @@ export default position =>
 
       this.light = new THREE.PointLight("#E38C40", 5, 50, 5);
 
-      mesh.add(new THREE.PointLightHelper(this.light));
-
-      // create the particle system
       mesh.add(this.light);
     }
 

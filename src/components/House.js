@@ -55,7 +55,12 @@ const House = (
       normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping;
       normalMap.repeat.set(textureScale, textureScale);
 
-      const wallMaterial = new THREE.MeshStandardMaterial({ map, normalMap });
+      const wallMaterial = new THREE.MeshStandardMaterial({
+        map,
+        normalMap,
+        roughness: 0.8,
+        metalness: 0.2
+      });
 
       const walls = new THREE.BoxBufferGeometry(
         wallsWidth,
@@ -73,7 +78,7 @@ const House = (
     async createRoof(roofHeight, roofOverhead, wallsHeight) {
       // normal roofOverhead = 0.705
 
-      const textureScale = 3;
+      const textureScale = 10;
 
       const map = await loadTexture("roof_texture.jpg");
       map.wrapS = map.wrapT = THREE.RepeatWrapping;
@@ -84,7 +89,9 @@ const House = (
 
       const roofMaterial = new THREE.MeshStandardMaterial({
         map,
-        normalMap: this.normalMap
+        normalMap: this.normalMap,
+        roughness: 0.8,
+        metalness: 0.2
       });
 
       const roof = new THREE.ConeBufferGeometry(
@@ -106,8 +113,21 @@ const House = (
     }
 
     async createChimney(wallsHeight, roofHeight) {
-      const chimneyMaterial = new THREE.MeshLambertMaterial({
-        color: 0x7f3026
+      const textureScale = 1;
+
+      const map = await loadTexture("wall_texture.jpg");
+      map.wrapS = map.wrapT = THREE.RepeatWrapping;
+      map.repeat.set(textureScale, textureScale);
+
+      const normalMap = await loadTexture("wall_normal.jpg");
+      normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping;
+      normalMap.repeat.set(textureScale, textureScale);
+
+      const chimneyMaterial = new THREE.MeshStandardMaterial({
+        map,
+        normalMap,
+        roughness: 0.8,
+        metalness: 0.2
       });
 
       const chimney = new THREE.BoxBufferGeometry(1, 3, 1);
@@ -127,18 +147,17 @@ const House = (
     }
 
     async createDormer(wallsHeight, roofHeight) {
-
       const dormerWindowTexture = await loadTexture("window_texture.png");
-      const sideWinowTexture = new THREE.MeshBasicMaterial( { color: 0x353535 } ); 
+      const sideWinowTexture = new THREE.MeshBasicMaterial({ color: 0x353535 });
 
-      const dormerMaterial = [                                                      
+      const dormerMaterial = [
         sideWinowTexture,
         sideWinowTexture,
         sideWinowTexture,
         sideWinowTexture,
-        new THREE.MeshStandardMaterial( { map: dormerWindowTexture } ),                      
-        sideWinowTexture,
-      ];     
+        new THREE.MeshStandardMaterial({ map: dormerWindowTexture }),
+        sideWinowTexture
+      ];
 
       const dormerRoofMaterial = new THREE.MeshLambertMaterial({
         color: 0x353535
@@ -152,7 +171,6 @@ const House = (
       const dormerRoofMesh = new THREE.Mesh(dormerRoof, dormerRoofMaterial);
       dormerRoofMesh.position.set(0, 0.4, 0);
 
-
       const dormerGroup = new THREE.Group();
       dormerGroup.add(dormerMesh);
       dormerGroup.add(dormerRoofMesh);
@@ -164,7 +182,6 @@ const House = (
 
       return dormerGroup;
     }
-
 
     smokeFactory() {
       this.smokeMaterial = new THREE.MeshLambertMaterial({
@@ -181,7 +198,6 @@ const House = (
 
       return this.smokeMesh;
     }
-
 
     update() {
       if (!this.smokeMaterial || !this.smokeMesh || !this.normalMap) {
