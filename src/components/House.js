@@ -129,7 +129,7 @@ const House = (
     async createDormer(wallsHeight, roofHeight) {
 
       const dormerWindowTexture = await loadTexture("window_texture.png");
-      const sideWinowTexture = new THREE.MeshBasicMaterial( { color: 0x353535 } );            
+      const sideWinowTexture = new THREE.MeshBasicMaterial( { color: 0x353535 } ); 
 
       const dormerMaterial = [                                                      
         sideWinowTexture,

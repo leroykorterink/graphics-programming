@@ -6,6 +6,7 @@ import Lighting from "../components/Lighting.js";
 import Mill from "../components/Mill.js";
 import Island from "../components/Island.js";
 import CampFire from "../components/CampFire.js";
+import Fence from "../components/Fence.js";
 
 export default [
   // General
@@ -16,6 +17,8 @@ export default [
 
   // House
   House(new THREE.Vector3(4, 0, -10), -7.5),
+  Tree(new THREE.Vector3(10, 0, -4)),
+  Tree(new THREE.Vector3(14, 0, -11)),
   Tree(new THREE.Vector3(-14, 0, -6)),
   Tree(new THREE.Vector3(-5, 0, -13)),
   Tree(new THREE.Vector3(-6.3, 0, -3)),
@@ -36,5 +39,10 @@ export default [
   Pine(new THREE.Vector3(-4, 0, 5)),
   Pine(new THREE.Vector3(-9, 0, 8)),
   Pine(new THREE.Vector3(-16, 0, 6.5)),
-  Pine(new THREE.Vector3(-14, 0, 11.75))
+  Pine(new THREE.Vector3(-14, 0, 11.75)),
+
+  //Fences
+  Fence(new THREE.Vector3(9.5, 0.3, -9), 10),
+  Fence(new THREE.Vector3(7.5, 0.3, -13.5), 11.75),
+
 ];
