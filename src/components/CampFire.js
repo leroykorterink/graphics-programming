@@ -27,7 +27,7 @@ export default position =>
       mesh.translateZ(-mesh.geometry.boundingBox.min.z + position.y);
 
       this.createFire(mesh);
-      
+
       // Add mesh to scene
       scene.add(mesh);
     }
@@ -66,9 +66,9 @@ export default position =>
     update() {
       if (!this.fire) return;
 
-      this.light.position.setX(-8.25);
+      this.light.position.setX(3.5);
       this.light.position.setZ(-0.5);
-      this.light.position.setY(5);
+      this.light.position.setY(12);
 
       this.fire.geometry.vertices.forEach(vertice => {
         const displacementRatio = Math.abs(vertice.z * 0.00175) + 1;
