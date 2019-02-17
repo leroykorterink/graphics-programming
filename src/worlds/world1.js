@@ -29,6 +29,7 @@ export default [
   Tree(new THREE.Vector3(-5, 0, -13)),
   Tree(new THREE.Vector3(-6.3, 0, -3)),
   Tree(new THREE.Vector3(-13, 0, 2)),
+  Tree(new THREE.Vector3(15, 0, -11)),
 
   // Mill section
   Mill(new THREE.Vector3(12, 0, 10), 35),
