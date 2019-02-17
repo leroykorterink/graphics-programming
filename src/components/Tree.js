@@ -1,5 +1,4 @@
 import StaticComponent from "../core/StaticComponent.js";
-import Trees from "./Forest.js";
 
 const getRandomClamped = (min = 0.7, max = 1) =>
   Math.random() * (max - min) + min;
