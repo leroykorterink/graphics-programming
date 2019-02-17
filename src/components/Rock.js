@@ -34,7 +34,7 @@ export default (position, angle = 0) =>
         mesh.material.needsUpdate = true;
       });
 
-      const mesh = group.children[getRandom(0, group.children.length)];
+      const mesh = group.children[getRandom(0, group.children.length - 1)];
 
       mesh.rotateY(radians);
       mesh.geometry.computeBoundingBox();

@@ -1,11 +1,10 @@
 import StaticComponent from "../core/StaticComponent.js";
 import makeFBXLoader from "../util/makeFBXLoader.js";
-import makeLoadTexture from "../util/makeLoadTexture.js";
 
 const loadFBX = makeFBXLoader(fileName => `assets/Rooster/${fileName}`);
 
-export default (position, angle = 45) =>
-  class Rock extends StaticComponent {
+export default () =>
+  class Rooster extends StaticComponent {
     constructor(scene) {
       super();
 

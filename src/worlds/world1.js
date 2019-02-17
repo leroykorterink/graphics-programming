@@ -8,11 +8,13 @@ import Island from "../components/Island.js";
 import CampFire from "../components/CampFire.js";
 import Rock from "../components/Rock.js";
 import Rooster from "../components/Rooster.js";
+import Airship from "../components/Airship.js";
 
 export default [
   // General
   Lighting,
   Skybox,
+  Airship(new THREE.Vector3(0, 10, -50)),
 
   Island(new THREE.Vector3(0, 1.75, 0)),
 
@@ -29,7 +31,7 @@ export default [
 
   // Mill section
   Mill(new THREE.Vector3(12, 0, 10), 35),
-  Rooster(new THREE.Vector3(-5, 0.25, 5), 165),
+  Rooster(),
   CampFire(new THREE.Vector3(-1.5, 0, 9)),
 
   // Forest
