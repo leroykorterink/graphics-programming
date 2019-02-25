@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace graphics_programming
@@ -16,7 +13,12 @@ namespace graphics_programming
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            // Starts application that renders 2D shapes
+            //Application.Run(new Form2D());
+
+            // Starts application that renders 3D shapes
+            Application.Run(new Form3D());
         }
     }
 }

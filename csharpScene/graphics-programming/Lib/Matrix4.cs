@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 
 namespace graphics_programming
 {
@@ -66,15 +65,15 @@ namespace graphics_programming
 
         public void RotateX(float degrees)
         {
-            var radians = Math.PI * degrees / 180.0;
+            var radians = Math.PI / 180.0 * degrees;
 
             var sin = (float)Math.Sin(radians);
             var cos = (float)Math.Cos(radians);
 
-            P22 += cos;
-            P32 += sin;
-            P23 += -sin;
-            P33 += cos;
+            P22 = cos;
+            P32 = sin;
+            P23 = -sin;
+            P33 = cos;
         }
 
         public void RotateY(float degrees)
@@ -84,10 +83,10 @@ namespace graphics_programming
             var sin = (float)Math.Sin(radians);
             var cos = (float)Math.Cos(radians);
 
-            P11 += cos;
-            P13 += sin;
-            P31 += -sin;
-            P33 += cos;
+            P11 = cos;
+            P13 = sin;
+            P31 = -sin;
+            P33 = cos;
         }
 
         public void RotateZ(float degrees)
@@ -97,10 +96,10 @@ namespace graphics_programming
             var sin = (float)Math.Sin(radians);
             var cos = (float)Math.Cos(radians);
 
-            P11 += cos;
-            P21 += sin;
-            P12 += -sin;
-            P22 += cos;
+            P11 = cos;
+            P21 = sin;
+            P12 = -sin;
+            P22 = cos;
         }
 
         public void Translate(Vector3 v)
