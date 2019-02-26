@@ -54,15 +54,15 @@ namespace graphics_programming
             Invalidate();
         }
 
-        private List<Vector2> ViewportTransformation(float width, float height, List<Vector2> vectors)
+        private List<Vector3> ViewportTransformation(float width, float height, List<Vector3> vectors)
         {
-            List<Vector2> result = new List<Vector2>();
+            List<Vector3> result = new List<Vector3>();
 
             float dx = width / 2;
             float dy = height / 2;
 
             vectors.ForEach(vector =>
-                result.Add(new Vector2(vector.X + dx, dy - vector.Y))
+                result.Add(new Vector3(vector.X + dx, dy - vector.Y, 0))
             );
 
             return result;
@@ -86,17 +86,17 @@ namespace graphics_programming
 
         private List<Vector2> ViewingPipeline(List<Vector3> vectorBuffer)
         {
-            var projectedVectorBuffer = ProjectionTransformation(cubeControls.Values.Distance, vectorBuffer);
+            //var transformedVectorBuffer = ViewportTransformation(Width, Height, vectorBuffer);
 
-            return ViewportTransformation(Width, Height, projectedVectorBuffer);
+            return ProjectionTransformation(cubeControls.Values.Distance, vectorBuffer);
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
 
-            axisX.Draw(e.Graphics, ViewportTransformation(Width, Height, axisX.vectorBuffer));
-            axisY.Draw(e.Graphics, ViewportTransformation(Width, Height, axisY.vectorBuffer));
+            //axisX.Draw(e.Graphics, ViewingPipeline(axisX3.vectorBuffer));
+            //axisY.Draw(e.Graphics, ViewingPipeline(axisY3.vectorBuffer));
 
             // Render 3d cube
             cube.Draw(e.Graphics, ViewingPipeline(cube.vectorBuffer));
