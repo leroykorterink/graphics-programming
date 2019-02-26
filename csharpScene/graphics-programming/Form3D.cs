@@ -77,10 +77,18 @@ namespace graphics_programming
             vectors.ForEach(vector =>
             {
                 var perspective = distanceInverse / vector.Z;
+
                 result.Add(new Vector2(perspective * vector.X, perspective * vector.Y));
             });
 
             return result;
+        }
+
+        private List<Vector2> ViewingPipeline(List<Vector3> vectorBuffer)
+        {
+            var projectedVectorBuffer = ProjectionTransformation(cubeControls.Values.Distance, vectorBuffer);
+
+            return ViewportTransformation(Width, Height, projectedVectorBuffer);
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -91,9 +99,7 @@ namespace graphics_programming
             axisY.Draw(e.Graphics, ViewportTransformation(Width, Height, axisY.vectorBuffer));
 
             // Render 3d cube
-            var transformedCube = ProjectionTransformation(cubeControls.Values.Distance, cube.vectorBuffer);
-
-            cube.Draw(e.Graphics, ViewportTransformation(Width, Height, transformedCube));
+            cube.Draw(e.Graphics, ViewingPipeline(cube.vectorBuffer));
 
             // Draw viewport properties
             cubeControls.Draw(e.Graphics);
