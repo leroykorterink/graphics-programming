@@ -1,4 +1,5 @@
 ﻿using graphics_programming.Shapes;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -9,33 +10,48 @@ namespace graphics_programming
     {
         private readonly AxisX axisX;
         private readonly AxisY axisY;
-        private readonly Cube cube;
+        private Cube cube = new Cube(Color.Purple);
 
-        private readonly dynamic initialValues = new
-        {
-            distance = 100,
-            radius = 10,
-            theta = -100,
-            phi = -10
-        };
+        private CubeControls cubeControls = new CubeControls();
 
         public Form3D()
         {
             InitializeComponent();
 
+            // Attach Invalidate method to the cubeControls onChange delegate
+            cubeControls.OnChange += UpdateForm;
+            
+            // Attach keydown event handler that is used to update 3d view properties
+            KeyDown += new KeyEventHandler(cubeControls.KeyDown);
+
+            //
             Width = 800;
             Height = 600;
 
             axisX = new AxisX(200);
             axisY = new AxisY(200);
+        }
 
-            
+        private void UpdateForm()
+        {
             cube = new Cube(Color.Purple);
 
-            var transformationMatrix = new Matrix4();
-            transformationMatrix.RotateY(25);
+            var matrix = new Matrix4();
+            matrix.RotateX(cubeControls.Values.ThetaX);
+            matrix.RotateY(cubeControls.Values.ThetaY);
+            matrix.RotateZ(cubeControls.Values.ThetaZ);
+            matrix.Translate(
+                new Vector3(
+                    cubeControls.Values.X,
+                    cubeControls.Values.Y,
+                    cubeControls.Values.Z
+                )
+            );
 
-            cube.ApplyMatrix(transformationMatrix);
+            cube.ApplyMatrix(matrix);
+
+            // Invalidate form to trigger a new paint
+            Invalidate();
         }
 
         private List<Vector2> ViewportTransformation(float width, float height, List<Vector2> vectors)
@@ -60,13 +76,11 @@ namespace graphics_programming
 
             vectors.ForEach(vector =>
             {
-                var projectionMatrix = new Matrix3(1, 0, 0, 0, 1, 0, 0, 0, 1);
-
-                /*var projectionMatrix = new Matrix3(
-                    -(distance / vector.Z), 0, 0,
-                    0, -(distance / vector.Z), 0,
+                var projectionMatrix = new Matrix3(
+                    (distanceInverse / vector.Z), 0, 0,
+                    0, (distanceInverse / vector.Z), 0,
                     0, 0, 0
-                );*/
+                );
 
                 result.Add(
                     projectionMatrix * new Vector2(vector.X, vector.Y)
@@ -80,15 +94,16 @@ namespace graphics_programming
         {
             base.OnPaint(e);
 
-            var distance = initialValues.distance;
-
             axisX.Draw(e.Graphics, ViewportTransformation(Width, Height, axisX.vectorBuffer));
             axisY.Draw(e.Graphics, ViewportTransformation(Width, Height, axisY.vectorBuffer));
 
             // Render 3d cube
-            var transformedCube = ProjectionTransformation(distance, cube.vectorBuffer);
+            var transformedCube = ProjectionTransformation(cubeControls.Values.Distance, cube.vectorBuffer);
 
             cube.Draw(e.Graphics, ViewportTransformation(Width, Height, transformedCube));
+
+            // Draw viewport properties
+            cubeControls.Draw(e.Graphics);
         }
     }
 }

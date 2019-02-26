@@ -65,7 +65,7 @@ namespace graphics_programming
 
         public void RotateX(float degrees)
         {
-            var radians = Math.PI / 180.0 * degrees;
+            var radians = degrees * Math.PI / 180.0;
 
             var sin = (float)Math.Sin(radians);
             var cos = (float)Math.Cos(radians);
@@ -104,9 +104,9 @@ namespace graphics_programming
 
         public void Translate(Vector3 v)
         {
-            P14 += v.X;
-            P24 += v.Y;
-            P34 += v.Z;
+            P14 = v.X;
+            P24 = v.Y;
+            P34 = v.Z;
         }
 
         #region arethmic operations

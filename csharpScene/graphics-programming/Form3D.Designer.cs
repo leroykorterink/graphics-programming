@@ -38,7 +38,6 @@
             this.Name = "Form3D";
             this.Text = "3D View";
             this.ResumeLayout(false);
-
         }
 
         #endregion

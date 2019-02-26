@@ -18,7 +18,7 @@ namespace graphics_programming.Shapes
                 vectorBuffer.Add(matrix * vector);
             });
 
-            // Replace vectors on square instance with the transformed vectors
+            // Replace vectors on instance with the transformed vectors
             shape.vectorBuffer = vectorBuffer;
 
             // return square to allow method chaining

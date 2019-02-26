@@ -185,9 +185,9 @@ namespace graphics_programming_tests
             m1.RotateY(45);
 
             var expected = new Matrix4(
-                1.70710683F, 0, 0.707106769F, 0,
+                0.7071068F, 0, 0.7071068F, 0,
                 0, 1, 0, 0,
-                -0.707106769F, 0, 1.70710683F, 0,
+                -0.7071068F, 0, 0.7071068F, 0,
                 0, 0, 0, 1
             );
 
