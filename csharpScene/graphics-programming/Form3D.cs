@@ -76,15 +76,8 @@ namespace graphics_programming
 
             vectors.ForEach(vector =>
             {
-                var projectionMatrix = new Matrix3(
-                    (distanceInverse / vector.Z), 0, 0,
-                    0, (distanceInverse / vector.Z), 0,
-                    0, 0, 0
-                );
-
-                result.Add(
-                    projectionMatrix * new Vector2(vector.X, vector.Y)
-                );
+                var perspective = distanceInverse / vector.Z;
+                result.Add(new Vector2(perspective * vector.X, perspective * vector.Y));
             });
 
             return result;
