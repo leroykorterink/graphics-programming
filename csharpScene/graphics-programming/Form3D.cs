@@ -36,19 +36,19 @@ namespace graphics_programming
         {
             cube = new Cube(Color.Purple);
 
-            var matrix = new Matrix4();
-            matrix.RotateX(cubeControls.Values.ThetaX);
-            matrix.RotateY(cubeControls.Values.ThetaY);
-            matrix.RotateZ(cubeControls.Values.ThetaZ);
-            matrix.Translate(
-                new Vector3(
-                    cubeControls.Values.X,
-                    cubeControls.Values.Y,
-                    cubeControls.Values.Z
-                )
-            );
+            var transformationMatrix = new Matrix4()
+                .RotateX(cubeControls.Values.ThetaX)
+                .RotateY(cubeControls.Values.ThetaY)
+                .RotateZ(cubeControls.Values.ThetaZ)
+                .Translate(
+                    new Vector3(
+                        cubeControls.Values.X,
+                        cubeControls.Values.Y,
+                        cubeControls.Values.Z
+                    )
+                );
 
-            cube.ApplyMatrix(matrix);
+            cube.ApplyMatrix(transformationMatrix);
 
             // Invalidate form to trigger a new paint
             Invalidate();
@@ -56,14 +56,18 @@ namespace graphics_programming
 
         private List<Vector3> ViewportTransformation(float width, float height, List<Vector3> vectors)
         {
+            var cameraPosition = new Vector3(5, 1, 5);
+
+            var viewMatrix = new Matrix4()
+                .Translate(cameraPosition)
+                .RotateZ(cubeControls.Values.CameraPhi)
+                .RotateX(cubeControls.Values.CameraTheta);
+
+            // TODO Inverse matrix
+
             List<Vector3> result = new List<Vector3>();
 
-            float dx = width / 2;
-            float dy = height / 2;
-
-            vectors.ForEach(vector =>
-                result.Add(new Vector3(vector.X + dx, dy - vector.Y, 0))
-            );
+            vectors.ForEach(vector => result.Add(viewMatrix * vector));
 
             return result;
         }
@@ -86,7 +90,7 @@ namespace graphics_programming
 
         private List<Vector2> ViewingPipeline(List<Vector3> vectorBuffer)
         {
-            //var transformedVectorBuffer = ViewportTransformation(Width, Height, vectorBuffer);
+            var transformedVectorBuffer = ViewportTransformation(Width, Height, vectorBuffer);
 
             return ProjectionTransformation(cubeControls.Values.Distance, vectorBuffer);
         }

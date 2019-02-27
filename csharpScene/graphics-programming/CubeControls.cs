@@ -7,8 +7,10 @@ using System.Windows.Forms;
 namespace graphics_programming
 {
     class CubeControlValues {
+        public float CameraTheta = 25;
+        public float CameraPhi = 40;
         public int Distance = 800;
-        
+
         // Cube properties
         public float X = 0;
         public float Y = 0;
@@ -70,11 +72,11 @@ namespace graphics_programming
             {
                 // Translate
                 case Keys.Right:
-                    Values.X += .1F;
+                    Values.X -= .1F;
                     break;
 
                 case Keys.Left:
-                    Values.X -= .1F;
+                    Values.X += .1F;
                     break;
 
                 case Keys.Up:

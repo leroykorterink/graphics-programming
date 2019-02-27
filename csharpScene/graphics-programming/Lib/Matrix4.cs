@@ -4,25 +4,25 @@ namespace graphics_programming
 {
     public class Matrix4
     {
-        private float P11 = 1;
-        private float P12;
-        private float P13;
-        private float P14;
+        public float P11 = 1;
+        public float P12;
+        public float P13;
+        public float P14;
 
-        private float P21;
-        private float P22 = 1;
-        private float P23;
-        private float P24;
+        public float P21;
+        public float P22 = 1;
+        public float P23;
+        public float P24;
 
-        private float P31;
-        private float P32;
-        private float P33 = 1;
-        private float P34;
+        public float P31;
+        public float P32;
+        public float P33 = 1;
+        public float P34;
 
-        private float P41;
-        private float P42;
-        private float P43;
-        private float P44 = 1;
+        public float P41;
+        public float P42;
+        public float P43;
+        public float P44 = 1;
 
         public Matrix4()
         {
@@ -61,52 +61,6 @@ namespace graphics_programming
             P42 = p42;
             P43 = p43;
             P44 = p44;
-        }
-
-        public void RotateX(float degrees)
-        {
-            var radians = degrees * Math.PI / 180.0;
-
-            var sin = (float)Math.Sin(radians);
-            var cos = (float)Math.Cos(radians);
-
-            P22 = cos;
-            P32 = sin;
-            P23 = -sin;
-            P33 = cos;
-        }
-
-        public void RotateY(float degrees)
-        {
-            var radians = Math.PI * degrees / 180.0;
-
-            var sin = (float)Math.Sin(radians);
-            var cos = (float)Math.Cos(radians);
-
-            P11 = cos;
-            P13 = sin;
-            P31 = -sin;
-            P33 = cos;
-        }
-
-        public void RotateZ(float degrees)
-        {
-            var radians = Math.PI * degrees / 180.0;
-
-            var sin = (float)Math.Sin(radians);
-            var cos = (float)Math.Cos(radians);
-
-            P11 = cos;
-            P21 = sin;
-            P12 = -sin;
-            P22 = cos;
-        }
-
-        public void Translate(Vector3 v)
-        {
-            P14 = v.X;
-            P24 = v.Y;
-            P34 = v.Z;
         }
 
         #region arethmic operations
@@ -238,5 +192,74 @@ namespace graphics_programming
         }
 
         #endregion
+    }
+
+    static class Matrix4ExtensionMethods
+    {
+        public static Matrix4 RotateX(this Matrix4 matrix, float degrees)
+        {
+            var radians = degrees * Math.PI / 180.0;
+
+            var sin = (float)Math.Sin(radians);
+            var cos = (float)Math.Cos(radians);
+
+            var rotationMatrix = new Matrix4
+            {
+                P22 = cos,
+                P32 = sin,
+                P23 = -sin,
+                P33 = cos
+            };
+
+            return rotationMatrix * matrix;
+        }
+
+        public static Matrix4 RotateY(this Matrix4 matrix, float degrees)
+        {
+            var radians = degrees * Math.PI / 180.0;
+
+            var sin = (float)Math.Sin(radians);
+            var cos = (float)Math.Cos(radians);
+
+            var rotationMatrix = new Matrix4
+            {
+                P11 = cos,
+                P13 = sin,
+                P31 = -sin,
+                P33 = cos
+            };
+
+            return rotationMatrix * matrix;
+        }
+
+        public static Matrix4 RotateZ(this Matrix4 matrix, float degrees)
+        {
+            var radians = degrees * Math.PI / 180.0;
+
+            var sin = (float)Math.Sin(radians);
+            var cos = (float)Math.Cos(radians);
+
+            var rotationMatrix = new Matrix4
+            {
+                P11 = cos,
+                P21 = sin,
+                P12 = -sin,
+                P22 = cos
+            };
+
+            return rotationMatrix * matrix;
+        }
+
+        public static Matrix4 Translate(this Matrix4 matrix, Vector3 velocity)
+        {
+            var translationMatrix = new Matrix4
+            {
+                P14 = velocity.X,
+                P24 = velocity.Y,
+                P34 = velocity.Z
+            };
+
+            return translationMatrix * matrix;
+        }
     }
 }
