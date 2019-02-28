@@ -9,7 +9,7 @@ namespace graphics_programming
     class CubeControlValues {
         public float CameraTheta = 25;
         public float CameraPhi = 40;
-        public int Distance = 800;
+        public float CameraDistance = 800;
 
         // Cube properties
         public float X = 0;
@@ -59,7 +59,7 @@ namespace graphics_programming
     /// </summary>
     class CubeControls
     {
-        public readonly CubeControlValues Values = new CubeControlValues();
+        public CubeControlValues Values = new CubeControlValues();
 
         public delegate void OnChangeHandler();
         public OnChangeHandler OnChange;
@@ -119,6 +119,10 @@ namespace graphics_programming
                     Values.IsOrthogonal = !Values.IsOrthogonal;
                     break;
 
+                case Keys.C:
+                    Values = new CubeControlValues();
+                    break;
+
                 default:
                     Console.WriteLine("Invalid command");
                 break;
@@ -130,7 +134,7 @@ namespace graphics_programming
         public void Draw(Graphics graphics)
         {
             graphics.DrawString(
-                $"Distance: {Values.Distance} \n\n\n" +
+                $"Distance: {Values.CameraDistance} \n\n\n" +
                 $"X: {Values.X} \n" +
                 $"Y: {Values.Y} \n" +
                 $"Z: {Values.Z} \n\n" +
