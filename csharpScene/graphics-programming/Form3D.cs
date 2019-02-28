@@ -58,12 +58,8 @@ namespace graphics_programming
             Invalidate();
         }
 
-        public List<Vector3> ViewportTransformation(float width, float height, List<Vector3> vectors)
+        public List<Vector3> ViewportTransformation(List<Vector3> vectors)
         {
-            //var viewMatrix = new Matrix4()
-            //    .RotateZ(cubeControls.Values.CameraPhi)
-            //    .RotateX(cubeControls.Values.CameraTheta);
-
             var thetaDegrees = Math.PI / 180 * cubeControls.Values.CameraTheta;
             var phiDegrees = Math.PI / 180 * cubeControls.Values.CameraPhi;
 
@@ -78,7 +74,6 @@ namespace graphics_programming
                 thetaCos * phiSin, thetaSin * phiSin, phiCos, cubeControls.Values.Distance,
                 0, 0, 0, 1
             );
-            //.Translate(cameraPosition);
 
             List<Vector3> result = new List<Vector3>();
 
@@ -91,6 +86,8 @@ namespace graphics_programming
         {
             List<Vector2> result = new List<Vector2>();
 
+            var center = new Vector2(Width / 2, Height / 2);
+
             vectors.ForEach(vector =>
             {
                 var perspective = distance / vector.Z;
@@ -99,7 +96,8 @@ namespace graphics_programming
                     perspective, 0, 0,
                     0, perspective, 0,
                     0, 0, 1
-                );
+                )
+                    .Translate(center);
 
                 result.Add(projectionMatrix * new Vector2(vector.X, vector.Y));
             });
@@ -112,7 +110,7 @@ namespace graphics_programming
             var verticalCenter = Height / 2;
             var horizontalCenter = Width / 2;
 
-            var transformedVectorBuffer = ViewportTransformation(Width, Height, vectorBuffer);
+            var transformedVectorBuffer = ViewportTransformation(vectorBuffer);
 
             return ProjectionTransformation(cubeControls.Values.Distance, vectorBuffer);
         }

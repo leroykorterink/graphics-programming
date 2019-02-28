@@ -93,7 +93,7 @@ namespace graphics_programming
                m1.P31 * scalar, m1.P32 * scalar, m1.P33 * scalar, m1.P34 * scalar,
                m1.P41 * scalar, m1.P42 * scalar, m1.P43 * scalar, m1.P44 * scalar
            );
-        }  
+        }
 
         public static Matrix4 operator *(Matrix4 m1, Matrix4 m2)
         {

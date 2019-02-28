@@ -26,15 +26,15 @@ namespace graphics_programming.Shapes
             vectorBuffer = new List<Vector3>
             {
                 // Cube vectors
-                new Vector3( 1.0f,  1.0f,  1.0f),     // 0
-                new Vector3( 1.0f, -1.0f,  1.0f),     // 1
-                new Vector3(-1.0f, -1.0f,  1.0f),     // 2
-                new Vector3(-1.0f,  1.0f,  1.0f),     // 3
+                new Vector3( 1.0f,  1.0f,  1.0f),    // 0
+                new Vector3( 1.0f, -1.0f,  1.0f),    // 1
+                new Vector3(-1.0f, -1.0f,  1.0f),    // 2
+                new Vector3(-1.0f,  1.0f,  1.0f),    // 3
 
                 new Vector3( 1.0f,  1.0f, -1.0f),    // 4
                 new Vector3( 1.0f, -1.0f, -1.0f),    // 5
                 new Vector3(-1.0f, -1.0f, -1.0f),    // 6
-                new Vector3(-1.0f,  1.0f, -1.0f),     // 7
+                new Vector3(-1.0f,  1.0f, -1.0f),    // 7
 
                 // Text vectors
                 new Vector3( 1.2f,  1.2f, 1.2f),     // 0

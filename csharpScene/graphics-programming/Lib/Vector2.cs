@@ -81,7 +81,10 @@
 
         public override string ToString()
         {
-            return $"|{X}|\n|{Y}|";
+            return (
+                $"|{X}|\n" +
+                $"|{Y}|"
+            );
         }
     }
 }
