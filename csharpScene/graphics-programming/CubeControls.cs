@@ -9,7 +9,7 @@ namespace graphics_programming
     class CubeControlValues {
         public float CameraTheta = 25;
         public float CameraPhi = 40;
-        public int Distance = 400;
+        public int Distance = 800;
 
         // Cube properties
         public float X = 0;

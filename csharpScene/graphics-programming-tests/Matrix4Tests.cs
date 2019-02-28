@@ -135,13 +135,13 @@ namespace graphics_programming_tests
         public void Should_MultiplyMatrixWithVector()
         {
             var m1 = new Matrix4(
-                1, 0, 0, -1,
-                0, 1, 0, -2,
-                0, 0, 1, -3,
+                1, 0, 0, 1,
+                0, 1, 0, 2,
+                0, 0, 1, 3,
                 0, 0, 0, 1
             );
 
-            var expected = new Vector3(-1, -2, -3);
+            var expected = new Vector3(1, 2, 3);
 
             Assert.Equal(expected, m1 * new Vector3());
         }
@@ -149,8 +149,7 @@ namespace graphics_programming_tests
         [Fact]
         public void Should_AddTranslationToMatrix()
         {
-            var m1 = new Matrix4();
-            m1.Translate(new Vector3(-1, -2, -3));
+            var m1 = new Matrix4().Translate(new Vector3(-1, -2, -3));
 
             var expected = new Matrix4(
                 1, 0, 0, -1,
@@ -165,13 +164,12 @@ namespace graphics_programming_tests
         [Fact]
         public void Should_RotateX()
         {
-            var m1 = new Matrix4();
-            m1.RotateX(45);
+            var m1 = new Matrix4().RotateX(45);
 
             var expected = new Matrix4(
                 1, 0, 0, 0,
-                0, 1.70710683F, -0.707106769F, 0,
-                0, 0.707106769F, 1.70710683F, 0,
+                0, 0.707106769F, -0.707106769F, 0,
+                0, 0.707106769F, 0.707106769F, 0,
                 0, 0, 0, 1
             );
 
@@ -181,13 +179,12 @@ namespace graphics_programming_tests
         [Fact]
         public void Should_RotateY()
         {
-            var m1 = new Matrix4();
-            m1.RotateY(45);
+            var m1 = new Matrix4().RotateY(45);
 
             var expected = new Matrix4(
-                0.7071068F, 0, 0.7071068F, 0,
+                0.707106769F, 0, 0.707106769F, 0,
                 0, 1, 0, 0,
-                -0.7071068F, 0, 0.7071068F, 0,
+                -0.707106769F, 0, 0.707106769F, 0,
                 0, 0, 0, 1
             );
 
@@ -197,12 +194,11 @@ namespace graphics_programming_tests
         [Fact]
         public void Should_RotateZ()
         {
-            var m1 = new Matrix4();
-            m1.RotateZ(45);
+            var m1 = new Matrix4().RotateZ(45);
 
             var expected = new Matrix4(
-                1.70710683F, -0.707106769F, 0, 0,
-                0.707106769F, 1.70710683F,  0, 0,
+                0.707106769F, -0.707106769F, 0, 0,
+                0.707106769F, 0.707106769F,  0, 0,
                 0, 0, 1, 0,
                 0, 0, 0, 1
             );

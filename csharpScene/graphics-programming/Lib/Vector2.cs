@@ -69,6 +69,16 @@
             return new Vector2(X, Y);
         }
 
+        public override bool Equals(object obj)
+        {
+            var vector = (Vector2)obj;
+
+            return (
+                vector.X == X &&
+                vector.Y == Y
+            );
+        }
+
         public override string ToString()
         {
             return $"|{X}|\n|{Y}|";

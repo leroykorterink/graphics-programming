@@ -194,7 +194,7 @@ namespace graphics_programming
         #endregion
     }
 
-    static class Matrix4ExtensionMethods
+    public static class Matrix4ExtensionMethods
     {
         public static Matrix4 RotateX(this Matrix4 matrix, float degrees)
         {

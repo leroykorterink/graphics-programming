@@ -5,15 +5,15 @@ namespace graphics_programming
 {
     public class Matrix3
     {
-        private float P11 = 1;
-        private float P12;
-        private float P13;
-        private float P21;
-        private float P22 = 1;
-        private float P23;
-        private float P31;
-        private float P32;
-        private float P33 = 1;
+        public float P11 = 1;
+        public float P12;
+        public float P13;
+        public float P21;
+        public float P22 = 1;
+        public float P23;
+        public float P31;
+        public float P32;
+        public float P33 = 1;
 
         public Matrix3()
         {
@@ -41,27 +41,15 @@ namespace graphics_programming
         {
             P11 = p11;
             P12 = p12;
+            P13 = p13;
+
             P21 = p21;
             P22 = p22;
-        }
+            P23 = p23;
 
-        public void Rotate(float degrees)
-        {
-            var radians = Math.PI / 180.0 * degrees;
-
-            var sin = (float)Math.Sin(radians);
-            var cos = (float)Math.Cos(radians);
-
-            P11 = cos;
-            P12 = sin;
-            P21 = -sin;
-            P22 = cos;
-        }
-
-        public void Translate(Vector2 v)
-        {
-            P13 += v.X;
-            P23 += v.Y;
+            P31 = p31;
+            P32 = p32;
+            P33 = p33;
         }
 
         #region arethmic operations
@@ -78,9 +66,9 @@ namespace graphics_programming
         public static Matrix3 operator -(Matrix3 m1, Matrix3 m2)
         {
             return new Matrix3(
-                m1.P11 + m2.P11, m1.P12 + m2.P12, m1.P13 + m2.P13,
-                m1.P21 + m2.P21, m1.P22 + m2.P22, m1.P23 + m2.P13,
-                m1.P31 + m2.P31, m1.P32 + m2.P32, m1.P33 + m2.P13
+                m1.P11 - m2.P11, m1.P12 - m2.P12, m1.P13 - m2.P13,
+                m1.P21 - m2.P21, m1.P22 - m2.P22, m1.P23 - m2.P13,
+                m1.P31 - m2.P31, m1.P32 - m2.P32, m1.P33 - m2.P13
             );
         }
 
@@ -173,5 +161,37 @@ namespace graphics_programming
 
 
         #endregion
+    }
+
+    public static class Matrix3ExtensionMethods
+    {
+        public static Matrix3 Rotate(this Matrix3 matrix, float degrees)
+        {
+            var radians = Math.PI / 180.0 * degrees;
+
+            var sin = (float)Math.Sin(radians);
+            var cos = (float)Math.Cos(radians);
+
+            var rotateMatrix = new Matrix3()
+            {
+                P11 = cos,
+                P12 = sin,
+                P21 = -sin,
+                P22 = cos
+            };
+
+            return rotateMatrix * matrix;
+        }
+
+        public static Matrix3 Translate(this Matrix3 matrix, Vector2 vector)
+        {
+            var translateMatrix = new Matrix3()
+            {
+                P13 = vector.X,
+                P23 = vector.Y
+            };
+
+            return translateMatrix * matrix;
+        }
     }
 }

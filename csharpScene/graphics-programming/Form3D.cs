@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace graphics_programming
@@ -29,8 +28,8 @@ namespace graphics_programming
             KeyDown += new KeyEventHandler(cubeControls.KeyDown);
 
             //
-            Width = 800;
-            Height = 600;
+            Width = 1000;
+            Height = 1000;
 
             axisX3 = new AxisX3(200);
             axisY3 = new AxisY3(200);
@@ -59,13 +58,12 @@ namespace graphics_programming
             Invalidate();
         }
 
-        private List<Vector3> ViewportTransformation(float width, float height, List<Vector3> vectors)
+        public List<Vector3> ViewportTransformation(float width, float height, List<Vector3> vectors)
         {
-            var viewMatrix = new Matrix4()
-                .RotateZ(cubeControls.Values.CameraPhi)
-                .RotateX(cubeControls.Values.CameraTheta);
+            //var viewMatrix = new Matrix4()
+            //    .RotateZ(cubeControls.Values.CameraPhi)
+            //    .RotateX(cubeControls.Values.CameraTheta);
 
-            /*
             var thetaDegrees = Math.PI / 180 * cubeControls.Values.CameraTheta;
             var phiDegrees = Math.PI / 180 * cubeControls.Values.CameraPhi;
 
@@ -81,7 +79,6 @@ namespace graphics_programming
                 0, 0, 0, 1
             );
             //.Translate(cameraPosition);
-            */
 
             List<Vector3> result = new List<Vector3>();
 
@@ -90,17 +87,21 @@ namespace graphics_programming
             return result;
         }
 
-        private List<Vector2> ProjectionTransformation(float distance, List<Vector3> vectors)
+        public List<Vector2> ProjectionTransformation(float distance, List<Vector3> vectors)
         {
             List<Vector2> result = new List<Vector2>();
 
-            var distanceInverse = -distance;
-
             vectors.ForEach(vector =>
             {
-                var perspective = -(distanceInverse / vector.Z);
+                var perspective = distance / vector.Z;
 
-                result.Add(new Vector2(perspective * vector.X, perspective * vector.Y));
+                var projectionMatrix = new Matrix3(
+                    perspective, 0, 0,
+                    0, perspective, 0,
+                    0, 0, 1
+                );
+
+                result.Add(projectionMatrix * new Vector2(vector.X, vector.Y));
             });
 
             return result;
@@ -114,14 +115,6 @@ namespace graphics_programming
             var transformedVectorBuffer = ViewportTransformation(Width, Height, vectorBuffer);
 
             return ProjectionTransformation(cubeControls.Values.Distance, vectorBuffer);
-
-            /*
-            return projectedVectors.Aggregate(
-                new List<Vector2>(),
-                (vectors, vector) => {
-                    vectors.Add(new Vector2(vector.X + horizontalCenter, vector.Y + verticalCenter))
-                    return vectors;
-                });*/
         }
 
         protected override void OnPaint(PaintEventArgs e)
