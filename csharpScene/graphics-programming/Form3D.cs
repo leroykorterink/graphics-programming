@@ -42,7 +42,7 @@ namespace graphics_programming
         {
             cube = new Cube(Color.Black);
 
-            var transformationMatrix = new Matrix4()
+            var transformationMatrix = new Matrix4(new Vector3(400, 400, 400))
                 .RotateX(cubeControls.Values.ThetaX)
                 .RotateY(cubeControls.Values.ThetaY)
                 .RotateZ(cubeControls.Values.ThetaZ)
@@ -93,7 +93,7 @@ namespace graphics_programming
             vectors.ForEach(vector =>
             {
                 var perspective = isOrthogonal
-                ? cubeControls.Values.Distance 
+                ? cubeControls.Values.Distance
                 : vector.Z / cubeControls.Values.Distance;
 
                 var projectionMatrix = new Matrix3(
