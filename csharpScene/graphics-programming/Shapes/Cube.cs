@@ -26,15 +26,15 @@ namespace graphics_programming.Shapes
             vectorBuffer = new List<Vector3>
             {
                 // Cube vectors
-                new Vector3( 1.0f,  1.0f, 1.0f),     // 0
-                new Vector3( 1.0f, -1.0f, 1.0f),     // 1
-                new Vector3(-1.0f, -1.0f, 1.0f),     // 2
-                new Vector3(-1.0f,  1.0f, 1.0f),     // 3
+                new Vector3( 1.0f,  1.0f,  1.0f),     // 0
+                new Vector3( 1.0f, -1.0f,  1.0f),     // 1
+                new Vector3(-1.0f, -1.0f,  1.0f),     // 2
+                new Vector3(-1.0f,  1.0f,  1.0f),     // 3
 
                 new Vector3( 1.0f,  1.0f, -1.0f),    // 4
                 new Vector3( 1.0f, -1.0f, -1.0f),    // 5
                 new Vector3(-1.0f, -1.0f, -1.0f),    // 6
-                new Vector3(-1.0f,  1.0f, -1.0f),    // 7
+                new Vector3(-1.0f,  1.0f, -1.0f),     // 7
 
                 // Text vectors
                 new Vector3( 1.2f,  1.2f, 1.2f),     // 0
@@ -57,7 +57,6 @@ namespace graphics_programming.Shapes
             g.DrawLine(_pen, vb[2].X, vb[2].Y, vb[3].X, vb[3].Y);    //2 -> 3
             g.DrawLine(_pen, vb[3].X, vb[3].Y, vb[0].X, vb[0].Y);    //3 -> 0
 
-            _pen.DashStyle = DashStyle.Dash;
             g.DrawLine(_pen, vb[4].X, vb[4].Y, vb[5].X, vb[5].Y);    //4 -> 5
             g.DrawLine(_pen, vb[5].X, vb[5].Y, vb[6].X, vb[6].Y);    //5 -> 6
             g.DrawLine(_pen, vb[6].X, vb[6].Y, vb[7].X, vb[7].Y);    //6 -> 7
