@@ -53,7 +53,10 @@
     <Compile Include="Form3D.Designer.cs">
       <DependentUpon>Form3D.cs</DependentUpon>
     </Compile>
+    <Compile Include="Shapes\AxisX3.cs" />
     <Compile Include="Shapes\AxisX.cs" />
+    <Compile Include="Shapes\AxisZ3.cs" />
+    <Compile Include="Shapes\AxisY3.cs" />
     <Compile Include="Shapes\AxisY.cs" />
     <Compile Include="Shapes\Cube.cs" />
     <Compile Include="Lib\Matrix4.cs" />

@@ -9,8 +9,9 @@ namespace graphics_programming
 {
     public partial class Form3D : Form
     {
-        private readonly AxisX axisX;
-        private readonly AxisY axisY;
+        private readonly AxisX3 axisX3;
+        private readonly AxisY3 axisY3;
+        private readonly AxisZ3 axisZ3;
         private Cube cube = new Cube(Color.Purple);
 
         private CubeControls cubeControls = new CubeControls();
@@ -31,13 +32,14 @@ namespace graphics_programming
             Width = 800;
             Height = 600;
 
-            axisX = new AxisX(200);
-            axisY = new AxisY(200);
+            axisX3 = new AxisX3(200);
+            axisY3 = new AxisY3(200);
+            axisZ3 = new AxisZ3(200);
         }
 
         private void UpdateForm()
         {
-            cube = new Cube(Color.Purple);
+            cube = new Cube(Color.Black);
 
             var transformationMatrix = new Matrix4()
                 .RotateX(cubeControls.Values.ThetaX)
@@ -59,12 +61,9 @@ namespace graphics_programming
 
         private List<Vector3> ViewportTransformation(float width, float height, List<Vector3> vectors)
         {
-            var cameraPosition = new Vector3(width / 2, height / 2, 0);
-
             var viewMatrix = new Matrix4()
                 .RotateZ(cubeControls.Values.CameraPhi)
-                .RotateX(cubeControls.Values.CameraTheta)
-                .Translate(cameraPosition);
+                .RotateX(cubeControls.Values.CameraTheta);
 
             /*
             var thetaDegrees = Math.PI / 180 * cubeControls.Values.CameraTheta;
@@ -129,8 +128,9 @@ namespace graphics_programming
         {
             base.OnPaint(e);
 
-            //axisX.Draw(e.Graphics, ViewingPipeline(axisX3.vectorBuffer));
-            //axisY.Draw(e.Graphics, ViewingPipeline(axisY3.vectorBuffer));
+            axisX3.Draw(e.Graphics, ViewingPipeline(axisX3.vectorBuffer));
+            axisY3.Draw(e.Graphics, ViewingPipeline(axisY3.vectorBuffer));
+            axisZ3.Draw(e.Graphics, ViewingPipeline(axisZ3.vectorBuffer));
 
             // Render 3d cube
             cube.Draw(e.Graphics, ViewingPipeline(cube.vectorBuffer));
