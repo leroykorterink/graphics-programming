@@ -11,7 +11,7 @@ namespace graphics_programming
         private readonly AxisX3 axisX3;
         private readonly AxisY3 axisY3;
         private readonly AxisZ3 axisZ3;
-        private Cube cube = new Cube(Color.Purple);
+        private Cube cube;
 
         private CubeControls cubeControls = new CubeControls();
 
@@ -31,9 +31,11 @@ namespace graphics_programming
             Width = 1000;
             Height = 1000;
 
-            axisX3 = new AxisX3(200);
-            axisY3 = new AxisY3(200);
-            axisZ3 = new AxisZ3(200);
+            axisX3 = new AxisX3();
+            axisY3 = new AxisY3();
+            axisZ3 = new AxisZ3();
+
+            UpdateForm();
         }
 
         private void UpdateForm()
@@ -82,7 +84,7 @@ namespace graphics_programming
             return result;
         }
 
-        public List<Vector2> ProjectionTransformation(float distance, List<Vector3> vectors)
+        public List<Vector2> ProjectionTransformation(List<Vector3> vectors, bool isOrthogonal = false)
         {
             List<Vector2> result = new List<Vector2>();
 
@@ -90,11 +92,13 @@ namespace graphics_programming
 
             vectors.ForEach(vector =>
             {
-                var perspective = distance / vector.Z;
+                var perspective = isOrthogonal
+                ? cubeControls.Values.Distance 
+                : vector.Z / cubeControls.Values.Distance;
 
                 var projectionMatrix = new Matrix3(
-                    perspective, 0, 0,
-                    0, perspective, 0,
+                    -perspective, 0, 0,
+                    0, -perspective, 0,
                     0, 0, 1
                 )
                     .Translate(center);
@@ -107,12 +111,9 @@ namespace graphics_programming
 
         private List<Vector2> ViewingPipeline(List<Vector3> vectorBuffer)
         {
-            var verticalCenter = Height / 2;
-            var horizontalCenter = Width / 2;
-
             var transformedVectorBuffer = ViewportTransformation(vectorBuffer);
 
-            return ProjectionTransformation(cubeControls.Values.Distance, vectorBuffer);
+            return ProjectionTransformation(vectorBuffer, cubeControls.Values.IsOrthogonal);
         }
 
         protected override void OnPaint(PaintEventArgs e)

@@ -21,6 +21,8 @@ namespace graphics_programming
         public float ThetaZ = 0;
 
         public float Scale = 0;
+
+        public bool IsOrthogonal = false;
     }
 
     /// <summary>
@@ -111,6 +113,10 @@ namespace graphics_programming
                 // Scale
                 case Keys.S:
                     Values.Scale += e.Shift ? -1F : 1F;
+                    break;
+
+                case Keys.O:
+                    Values.IsOrthogonal = !Values.IsOrthogonal;
                     break;
 
                 default:
