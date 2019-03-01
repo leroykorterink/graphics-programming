@@ -21,7 +21,7 @@ namespace graphics_programming.Shapes
 
         public void Draw(Graphics g, List<Vector2> vb)
         {
-            Pen pen = new Pen(Color.Green, 2f);
+            Pen pen = new Pen(Color.Blue, 2f);
             g.DrawLine(pen, vb[0].X, vb[0].Y, vb[1].X, vb[1].Y);
             Font font = new Font("Arial", 10);
             PointF p = new PointF(vb[1].X, vb[1].Y);

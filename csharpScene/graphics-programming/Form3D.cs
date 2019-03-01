@@ -42,15 +42,15 @@ namespace graphics_programming
         {
             cube = new Cube(Color.Black);
 
-            var transformationMatrix = new Matrix4()
-                .RotateX(cubeControls.Values.ThetaX)
-                .RotateY(cubeControls.Values.ThetaY)
-                .RotateZ(cubeControls.Values.ThetaZ)
+            var transformationMatrix = (new Matrix4() * cubeControls.Values.CubeScale)
+                .RotateX(cubeControls.Values.CubeThetaX)
+                .RotateY(cubeControls.Values.CubeThetaY)
+                .RotateZ(cubeControls.Values.CubeThetaZ)
                 .Translate(
                     new Vector3(
-                        cubeControls.Values.X,
-                        cubeControls.Values.Y,
-                        cubeControls.Values.Z
+                        cubeControls.Values.CubeX,
+                        cubeControls.Values.CubeY,
+                        cubeControls.Values.CubeZ
                     )
                 );
 
@@ -62,8 +62,8 @@ namespace graphics_programming
 
         public List<Vector3> ViewportTransformation(List<Vector3> vectors)
         {
-            var thetaDegrees = Math.PI / 180 * cubeControls.Values.CameraTheta;
-            var phiDegrees = Math.PI / 180 * cubeControls.Values.CameraPhi;
+            var thetaDegrees = Math.PI / 180 * cubeControls.Values.CameraThetaY;
+            var phiDegrees = Math.PI / 180 * cubeControls.Values.CameraThetaX;
 
             var thetaSin = (float)Math.Sin(thetaDegrees);
             var phiSin = (float)Math.Sin(phiDegrees);
@@ -73,7 +73,7 @@ namespace graphics_programming
             var viewMatrix = new Matrix4(
                 -thetaSin, thetaCos, 0, 0,
                 -thetaCos * phiCos, -phiCos * thetaSin, phiSin, 0,
-                thetaCos * phiSin, thetaSin * phiSin, phiCos, cubeControls.Values.CameraDistance,
+                thetaCos * phiSin, thetaSin * phiSin, phiCos, cubeControls.Values.CameraR,
                 0, 0, 0, 1
             );
 
@@ -94,7 +94,7 @@ namespace graphics_programming
             {
                 var perspective = isOrthogonal
                     ? cubeControls.Values.CameraDistance
-                    : cubeControls.Values.CameraDistance / 20;
+                    : cubeControls.Values.CameraDistance / vector.Z;
 
                 var projectionMatrix = new Matrix3(
                     -perspective, 0, 0,
@@ -113,7 +113,7 @@ namespace graphics_programming
         {
             var transformedVectorBuffer = ViewportTransformation(vectorBuffer);
 
-            return ProjectionTransformation(vectorBuffer, cubeControls.Values.IsOrthogonal);
+            return ProjectionTransformation(transformedVectorBuffer, cubeControls.Values.IsOrthogonal);
         }
 
         protected override void OnPaint(PaintEventArgs e)

@@ -7,22 +7,25 @@ using System.Windows.Forms;
 namespace graphics_programming
 {
     class CubeControlValues {
-        public float CameraTheta = 25;
-        public float CameraPhi = 40;
-        public float CameraDistance = 800;
+        // Rendering properties
+        public bool IsOrthogonal = false;
+
+        // Camera properties
+        public float CameraR = 10;            // R / r
+        public float CameraDistance = 800;    // D / d
+        public float CameraThetaX = -10;         // P / p
+        public float CameraThetaY = -100;      // T / t
 
         // Cube properties
-        public float X = 0;
-        public float Y = 0;
-        public float Z = 0;
+        public float CubeScale = 1;           // S / s
 
-        public float ThetaX = 0;
-        public float ThetaY = 0;
-        public float ThetaZ = 0;
+        public float CubeX = 0;               // X / x
+        public float CubeY = 0;               // X / x
+        public float CubeZ = 0;               // X / x
 
-        public float Scale = 0;
-
-        public bool IsOrthogonal = false;
+        public float CubeThetaX = 0;          // ? / ?
+        public float CubeThetaY = 0;          // ? / ?
+        public float CubeThetaZ = 0;          // ? / ?
     }
 
     /// <summary>
@@ -64,64 +67,115 @@ namespace graphics_programming
         public delegate void OnChangeHandler();
         public OnChangeHandler OnChange;
 
-        Brush _brush = new SolidBrush(Color.Black);
-        Font _font = new Font("Arial", 12, FontStyle.Bold);
-        Point _position = new Point(0, 0);
+        private readonly Brush _brush = new SolidBrush(Color.Black);
+        private readonly Font _font = new Font("Arial", 12, FontStyle.Bold);
+        private readonly Point _position = new Point(0, 0);
+
+        private readonly Timer _timer;
+        private readonly AnimationControl _animationControl = new AnimationControl();
+
+        public CubeControls()
+        {
+            _timer = new Timer();
+            _timer.Interval = 50;
+            _timer.Tick += OnTick;
+        }
+
+        private void OnTick(object sender, EventArgs e)
+        {
+            _animationControl.Update(Values);
+
+            OnChange();
+        }
 
         public void KeyDown(object sender, KeyEventArgs e)
         {
             switch(e.KeyCode)
             {
-                // Translate
+                #region Camera properties
+
+                case Keys.R:
+                    Values.CameraR += e.Shift ? -1F : 1F;
+                    break;
+
+                case Keys.D:
+                    Values.CameraDistance += e.Shift ? -5F : 5F;
+                    break;
+
+                #endregion
+
+                #region Translate cube
+
                 case Keys.Right:
-                    Values.X -= .1F;
+                    Values.CubeX -= .1F;
                     break;
 
                 case Keys.Left:
-                    Values.X += .1F;
+                    Values.CubeX += .1F;
                     break;
 
                 case Keys.Up:
-                    Values.Y += .1F;
+                    Values.CubeY += .1F;
                     break;
 
                 case Keys.Down:
-                    Values.Y -= .1F;
+                    Values.CubeY -= .1F;
                     break;
 
                 case Keys.PageUp:
-                    Values.Z += .1F;
+                    Values.CubeZ += .1F;
                     break;
 
                 case Keys.PageDown:
-                    Values.Z -= .1F;
+                    Values.CubeZ -= .1F;
                     break;
 
-                // Rotate
+                #endregion
+
+                #region Rotate cube
+
                 case Keys.X:
-                    Values.ThetaX += e.Shift ? -1F : 1F;
+                    Values.CubeThetaX += e.Shift ? -1F : 1F;
                     break;
 
                 case Keys.Y:
-                    Values.ThetaY += e.Shift ? -1F : 1F;
+                    Values.CubeThetaY += e.Shift ? -1F : 1F;
                     break;
 
                 case Keys.Z:
-                    Values.ThetaZ += e.Shift ? -1F : 1F;
+                    Values.CubeThetaZ += e.Shift ? -1F : 1F;
                     break;
 
-                // Scale
+                #endregion
+
+                #region Scale cube
+
+                // Scale cube
                 case Keys.S:
-                    Values.Scale += e.Shift ? -1F : 1F;
+                    Values.CubeScale += e.Shift ? -1F : 1F;
                     break;
 
+                #endregion
+
+                #region Rendering properties
+
+                // Toggle animation
+                case Keys.A:
+                    _timer.Enabled = !_timer.Enabled;
+                    break;
+
+                // Toggle orthogonal rendering
                 case Keys.O:
                     Values.IsOrthogonal = !Values.IsOrthogonal;
                     break;
 
+                // Reset values
                 case Keys.C:
+                    _timer.Enabled = false;
                     Values = new CubeControlValues();
                     break;
+
+                #endregion
 
                 default:
                     Console.WriteLine("Invalid command");
@@ -134,13 +188,18 @@ namespace graphics_programming
         public void Draw(Graphics graphics)
         {
             graphics.DrawString(
-                $"Distance: {Values.CameraDistance} \n\n\n" +
-                $"X: {Values.X} \n" +
-                $"Y: {Values.Y} \n" +
-                $"Z: {Values.Z} \n\n" +
-                $"ThetaX: {Values.ThetaX} \n" +
-                $"ThetaY: {Values.ThetaY} \n" +
-                $"ThetaZ: {Values.ThetaZ} \n",
+                $"IsOrthogonal   = {Values.IsOrthogonal}\n" +
+                $"CameraR        = {Values.CameraR}\n" +
+                $"CameraDistance = {Values.CameraDistance}\n" +
+                $"CameraThetaX   = {Values.CameraThetaX}\n" +
+                $"CameraThetaY   = {Values.CameraThetaY}\n" +
+                $"CubeScale      = {Values.CubeScale}\n" +
+                $"CubeX          = {Values.CubeX}\n" +
+                $"CubeY          = {Values.CubeY}\n" +
+                $"CubeZ          = {Values.CubeZ}\n" +
+                $"CubeThetaX     = {Values.CubeThetaX}\n" +
+                $"CubeThetaY     = {Values.CubeThetaY}\n" +
+                $"CubeThetaZ     = {Values.CubeThetaZ}\n",
                 _font, 
                 _brush, 
                 _position
