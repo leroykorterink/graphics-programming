@@ -75,7 +75,8 @@ namespace graphics_programming
                 -thetaCos * phiCos, -phiCos * thetaSin, phiSin, 0,
                 thetaCos * phiSin, thetaSin * phiSin, phiCos, -cubeControls.Values.CameraR,
                 0, 0, 0, 1
-            );
+            )
+                .RotateY(180);
 
             List<Vector3> result = new List<Vector3>();
 
@@ -92,7 +93,7 @@ namespace graphics_programming
 
             vectors.ForEach(vector =>
             {
-                var perspective = cubeControls.Values.CameraDistance / -vector.Z;
+                var perspective = -(cubeControls.Values.CameraDistance / vector.Z);
 
                 var projectionMatrix = new Matrix3(
                     perspective, 0, 0,
