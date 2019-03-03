@@ -40,7 +40,7 @@ namespace graphics_programming
 
         private void UpdateForm()
         {
-            cube = new Cube(Color.Black);
+            cube = new Cube();
 
             var transformationMatrix = (new Matrix4() * cubeControls.Values.CubeScale)
                 .RotateX(cubeControls.Values.CubeThetaX)
@@ -62,8 +62,8 @@ namespace graphics_programming
 
         public List<Vector3> ViewportTransformation(List<Vector3> vectors)
         {
-            var thetaDegrees = Math.PI / 180 * cubeControls.Values.CameraThetaZ;
-            var phiDegrees = Math.PI / 180 * cubeControls.Values.CameraThetaY;
+            var thetaDegrees = Math.PI / 180 * cubeControls.Values.CameraTheta;
+            var phiDegrees = Math.PI / 180 * cubeControls.Values.CameraPhi;
 
             var thetaSin = (float)Math.Sin(thetaDegrees);
             var phiSin = (float)Math.Sin(phiDegrees);
@@ -92,7 +92,7 @@ namespace graphics_programming
 
             vectors.ForEach(vector =>
             {
-                var perspective = -(cubeControls.Values.CameraDistance / vector.Z);
+                var perspective = cubeControls.Values.CameraDistance / -vector.Z;
 
                 var projectionMatrix = new Matrix3(
                     perspective, 0, 0,

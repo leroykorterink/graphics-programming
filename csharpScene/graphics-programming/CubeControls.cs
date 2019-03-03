@@ -5,14 +5,11 @@ using System.Windows.Forms;
 namespace graphics_programming
 {
     class CubeControlValues {
-        // Rendering properties
-        public bool IsOrthogonal = false;
-
         // Camera properties
         public float CameraR = 10;            // R / r
         public float CameraDistance = 800;    // D / d
-        public float CameraThetaY = -10;      // P / p
-        public float CameraThetaZ = -100;     // T / t
+        public float CameraTheta = -100;      // T / t
+        public float CameraPhi = -10;         // P / p
 
         // Cube properties
         public float CubeScale = 1;           // S / s
@@ -74,8 +71,11 @@ namespace graphics_programming
 
         public CubeControls()
         {
-            _timer = new Timer();
-            _timer.Interval = 50;
+            _timer = new Timer
+            {
+                Interval = 50
+            };
+
             _timer.Tick += OnTick;
         }
 
@@ -100,12 +100,12 @@ namespace graphics_programming
                     Values.CameraDistance += e.Shift ? -5F : 5F;
                     break;
 
-                case Keys.T:
-                    Values.CameraThetaZ += e.Shift ? -1F : 1F;
+                case Keys.P:
+                    Values.CameraPhi += e.Shift ? -1F : 1F;
                     break;
 
-                case Keys.P:
-                    Values.CameraThetaY += e.Shift ? -1F : 1F;
+                case Keys.T:
+                    Values.CameraTheta += e.Shift ? -1F : 1F;
                     break;
 
                 #endregion
@@ -170,12 +170,6 @@ namespace graphics_programming
                     _timer.Enabled = !_timer.Enabled;
                     break;
 
-                // Toggle orthogonal rendering
-                case Keys.O:
-                    Values.CameraDistance = Values.IsOrthogonal ? 800 : 150;
-                    Values.IsOrthogonal = !Values.IsOrthogonal;
-                    break;
-
                 // Reset values
                 case Keys.C:
                     _timer.Enabled = false;
@@ -195,20 +189,20 @@ namespace graphics_programming
         public void Draw(Graphics graphics)
         {
             graphics.DrawString(
-                $"IsOrthogonal (o) \t\t\t = {Values.IsOrthogonal}\n" +
                 $"CameraR (R/r) \t\t\t\t = {Values.CameraR}\n" +
                 $"CameraDistance (D/d) \t\t\t = {Values.CameraDistance}\n" +
-                $"CameraThetaY (T/t) \t\t\t = {Values.CameraThetaY}\n" +
-                $"CameraThetaZ (P/p) \t\t\t = {Values.CameraThetaZ}\n" +
+                $"CameraTheta (T/t) \t\t\t = {Values.CameraTheta}\n" +
+                $"CameraPhi (P/p) \t\t\t = {Values.CameraPhi}\n" +
                 $"CubeScale (S/s) \t\t\t = {Values.CubeScale}\n" +
                 $"CubeX (X/x) \t\t\t\t = {Values.CubeX}\n" +
                 $"CubeY (Y/y) \t\t\t\t = {Values.CubeY}\n" +
                 $"CubeZ (Z/z) \t\t\t\t = {Values.CubeZ}\n" +
                 $"CubeThetaX (Left/Right) \t\t = {Values.CubeThetaX}\n" +
                 $"CubeThetaY (Up/Down) \t\t\t = {Values.CubeThetaY}\n" +
-                $"CubeThetaZ (PageUp/PageDown) \t = {Values.CubeThetaZ}\n",
-                _font, 
-                _brush, 
+                $"CubeThetaZ (PageUp/PageDown) \t = {Values.CubeThetaZ}\n" +
+                $"Animation (a) \t\t\t\t = {(_timer.Enabled ? $"On ({_animationControl.CurrentAnimation.GetType().Name})" : "Off")}",
+                _font,
+                _brush,
                 _position
             );
         }

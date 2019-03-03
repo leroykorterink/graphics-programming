@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 using System.Drawing;
 
@@ -10,7 +6,7 @@ namespace graphics_programming.Shapes
 {
     public class AxisZ3 : Shape3
     {
-        public AxisZ3(float size = 2.5F)
+        public AxisZ3(float size = 3F)
         {
             vectorBuffer = new List<Vector3>
             {

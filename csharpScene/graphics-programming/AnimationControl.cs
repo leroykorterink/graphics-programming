@@ -4,25 +4,30 @@ namespace graphics_programming
 {
     class AnimationControl
     {
-        private Animation _currentAnimation;
+        public IAnimation CurrentAnimation { get; private set; }
 
         public AnimationControl()
         {
-            _currentAnimation = new ScaleUp();
+            CurrentAnimation = new ScaleUp();
         }
 
         public void Update(CubeControlValues cubeControlValues)
         {
-            _currentAnimation.Calculate(this, cubeControlValues);
+            CurrentAnimation.Calculate(this, cubeControlValues);
         }
 
-        public void SetAnimation(Animation animation)
+        public void SetAnimation(IAnimation animation)
         {
-            _currentAnimation = animation;
+            CurrentAnimation = animation;
         }
     }
 
-    class ScaleUp : Animation
+    interface IAnimation
+    {
+        void Calculate(AnimationControl animationControl, CubeControlValues values);
+    }
+
+    class ScaleUp : IAnimation
     {
         public void Calculate(AnimationControl animationControl, CubeControlValues values)
         {
@@ -33,11 +38,11 @@ namespace graphics_programming
             }
 
             values.CubeScale += .01F;
-            values.CameraThetaZ--;
+            values.CameraTheta--;
         }
     }
 
-    class ScaleDown : Animation
+    class ScaleDown : IAnimation
     {
         public void Calculate(AnimationControl animationControl, CubeControlValues values)
         {
@@ -48,11 +53,11 @@ namespace graphics_programming
             }
 
             values.CubeScale -= .01F;
-            values.CameraThetaZ--;
+            values.CameraTheta--;
         }
     }
 
-    class RotateXForward : Animation
+    class RotateXForward : IAnimation
     {
         public void Calculate(AnimationControl animationControl, CubeControlValues values)
         {
@@ -63,11 +68,11 @@ namespace graphics_programming
             }
 
             values.CubeThetaX++;
-            values.CameraThetaZ--;
+            values.CameraTheta--;
         }
     }
 
-    class RotateXBackward : Animation
+    class RotateXBackward : IAnimation
     {
         public void Calculate(AnimationControl animationControl, CubeControlValues values)
         {
@@ -78,11 +83,11 @@ namespace graphics_programming
             }
 
             values.CubeThetaX--;
-            values.CameraThetaZ--;
+            values.CameraTheta--;
         }
     }
 
-    class RotateYForward : Animation
+    class RotateYForward : IAnimation
     {
         public void Calculate(AnimationControl animationControl, CubeControlValues values)
         {
@@ -93,11 +98,11 @@ namespace graphics_programming
             }
 
             values.CubeThetaY++;
-            values.CameraThetaY++;
+            values.CameraPhi++;
         }
     }
 
-    class RotateYBackward : Animation
+    class RotateYBackward : IAnimation
     {
         public void Calculate(AnimationControl animationControl, CubeControlValues values)
         {
@@ -108,30 +113,25 @@ namespace graphics_programming
             }
 
             values.CubeThetaY--;
-            values.CameraThetaY++;
+            values.CameraPhi++;
         }
     }
 
-    class ResetCameraPosition : Animation
+    class ResetCameraPosition : IAnimation
     {
         CubeControlValues defaultValues = new CubeControlValues();
 
         public void Calculate(AnimationControl animationControl, CubeControlValues values)
         {
-            if (values.CameraThetaY == defaultValues.CameraThetaY && values.CameraThetaZ == defaultValues.CameraThetaZ) {
+            if (values.CameraTheta == defaultValues.CameraTheta && values.CameraPhi == defaultValues.CameraPhi) {
                animationControl.SetAnimation(new ScaleUp());
             }
 
-            if (values.CameraThetaY != defaultValues.CameraThetaY)
-                values.CameraThetaY += values.CameraThetaY < defaultValues.CameraThetaY ? 1F : -1F;
+            if (values.CameraTheta != defaultValues.CameraTheta)
+                values.CameraTheta += values.CameraTheta < defaultValues.CameraTheta ? 1F : -1F;
 
-            if (values.CameraThetaZ != defaultValues.CameraThetaZ)
-                values.CameraThetaZ += values.CameraThetaZ < defaultValues.CameraThetaZ ? 1F : -1F;
+            if (values.CameraPhi != defaultValues.CameraPhi)
+                values.CameraPhi += values.CameraPhi < defaultValues.CameraPhi ? 1F : -1F;
         }
-    }
-
-    interface Animation
-    {
-        void Calculate(AnimationControl animationControl, CubeControlValues values);
     }
 }
