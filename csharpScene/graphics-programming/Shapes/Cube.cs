@@ -57,6 +57,7 @@ namespace graphics_programming.Shapes
             g.DrawLine(_pen, vb[2].X, vb[2].Y, vb[3].X, vb[3].Y);    //2 -> 3
             g.DrawLine(_pen, vb[3].X, vb[3].Y, vb[0].X, vb[0].Y);    //3 -> 0
 
+            _pen.DashStyle = DashStyle.Dot;
             g.DrawLine(_pen, vb[4].X, vb[4].Y, vb[5].X, vb[5].Y);    //4 -> 5
             g.DrawLine(_pen, vb[5].X, vb[5].Y, vb[6].X, vb[6].Y);    //5 -> 6
             g.DrawLine(_pen, vb[6].X, vb[6].Y, vb[7].X, vb[7].Y);    //6 -> 7

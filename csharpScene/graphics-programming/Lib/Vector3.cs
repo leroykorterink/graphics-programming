@@ -1,6 +1,9 @@
-﻿namespace graphics_programming
+﻿using System;
+
+namespace graphics_programming
 {
-    public class Vector3
+    #pragma warning disable CS0661, CS0660
+    public class Vector3 : IEquatable<Vector3>
     {
         public float X;
         public float Y;
@@ -73,14 +76,12 @@
 
         #region overrides
 
-        public override bool Equals(object obj)
+        public bool Equals(Vector3 other)
         {
-            var vector = (Vector3)obj;
-
             return (
-                vector.X == X &&    
-                vector.Y == Y &&    
-                vector.Z == Z
+                other.X == X &&
+                other.Y == Y &&
+                other.Z == Z
             );
         }
 

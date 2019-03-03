@@ -10,7 +10,7 @@ namespace graphics_programming.Shapes
 {
     public class AxisZ3 : Shape3
     {
-        public AxisZ3(int size = 100)
+        public AxisZ3(float size = 2.5F)
         {
             vectorBuffer = new List<Vector3>
             {

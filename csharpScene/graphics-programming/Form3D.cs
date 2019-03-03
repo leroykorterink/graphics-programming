@@ -13,7 +13,7 @@ namespace graphics_programming
         private readonly AxisZ3 axisZ3;
         private Cube cube;
 
-        private CubeControls cubeControls = new CubeControls();
+        private readonly CubeControls cubeControls = new CubeControls();
 
         public Form3D()
         {
@@ -25,11 +25,11 @@ namespace graphics_programming
             cubeControls.OnChange += UpdateForm;
             
             // Attach keydown event handler that is used to update 3d view properties
-            KeyDown += new KeyEventHandler(cubeControls.KeyDown);
+            KeyDown += cubeControls.KeyDown;
 
             //
-            Width = 1000;
-            Height = 1000;
+            Width = 800;
+            Height = 800;
 
             axisX3 = new AxisX3();
             axisY3 = new AxisY3();
@@ -62,8 +62,8 @@ namespace graphics_programming
 
         public List<Vector3> ViewportTransformation(List<Vector3> vectors)
         {
-            var thetaDegrees = Math.PI / 180 * cubeControls.Values.CameraThetaY;
-            var phiDegrees = Math.PI / 180 * cubeControls.Values.CameraThetaX;
+            var thetaDegrees = Math.PI / 180 * cubeControls.Values.CameraThetaZ;
+            var phiDegrees = Math.PI / 180 * cubeControls.Values.CameraThetaY;
 
             var thetaSin = (float)Math.Sin(thetaDegrees);
             var phiSin = (float)Math.Sin(phiDegrees);
@@ -73,7 +73,7 @@ namespace graphics_programming
             var viewMatrix = new Matrix4(
                 -thetaSin, thetaCos, 0, 0,
                 -thetaCos * phiCos, -phiCos * thetaSin, phiSin, 0,
-                thetaCos * phiSin, thetaSin * phiSin, phiCos, cubeControls.Values.CameraR,
+                thetaCos * phiSin, thetaSin * phiSin, phiCos, -cubeControls.Values.CameraR,
                 0, 0, 0, 1
             );
 
@@ -84,7 +84,7 @@ namespace graphics_programming
             return result;
         }
 
-        public List<Vector2> ProjectionTransformation(List<Vector3> vectors, bool isOrthogonal = false)
+        public List<Vector2> ProjectionTransformation(List<Vector3> vectors)
         {
             List<Vector2> result = new List<Vector2>();
 
@@ -92,13 +92,11 @@ namespace graphics_programming
 
             vectors.ForEach(vector =>
             {
-                var perspective = isOrthogonal
-                    ? cubeControls.Values.CameraDistance
-                    : cubeControls.Values.CameraDistance / vector.Z;
+                var perspective = -(cubeControls.Values.CameraDistance / vector.Z);
 
                 var projectionMatrix = new Matrix3(
-                    -perspective, 0, 0,
-                    0, -perspective, 0,
+                    perspective, 0, 0,
+                    0, perspective, 0,
                     0, 0, 1
                 )
                     .Translate(center);
@@ -111,9 +109,7 @@ namespace graphics_programming
 
         private List<Vector2> ViewingPipeline(List<Vector3> vectorBuffer)
         {
-            var transformedVectorBuffer = ViewportTransformation(vectorBuffer);
-
-            return ProjectionTransformation(transformedVectorBuffer, cubeControls.Values.IsOrthogonal);
+            return ProjectionTransformation(ViewportTransformation(vectorBuffer));
         }
 
         protected override void OnPaint(PaintEventArgs e)

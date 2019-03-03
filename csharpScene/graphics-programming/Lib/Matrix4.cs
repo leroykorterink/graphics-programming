@@ -2,7 +2,8 @@
 
 namespace graphics_programming
 {
-    public class Matrix4
+    #pragma warning disable CS0661, CS0660
+    public class Matrix4 : IEquatable<Matrix4>
     {
         public float P11 = 1;
         public float P12;
@@ -155,33 +156,6 @@ namespace graphics_programming
 
         #region overrides
 
-        public override bool Equals(object obj)
-        {
-            var matrix = (Matrix4)obj;
-
-            return (
-                matrix.P11 == P11 &&
-                matrix.P12 == P12 &&
-                matrix.P13 == P13 &&
-                matrix.P14 == P14 &&
-
-                matrix.P21 == P21 &&
-                matrix.P22 == P22 &&
-                matrix.P23 == P23 &&
-                matrix.P24 == P24 &&
-
-                matrix.P31 == P31 &&
-                matrix.P32 == P32 &&
-                matrix.P33 == P33 &&
-                matrix.P34 == P34 &&
-
-                matrix.P41 == P41 &&
-                matrix.P42 == P42 &&
-                matrix.P43 == P43 &&
-                matrix.P44 == P44
-            );
-        }
-
         public override string ToString()
         {
             return
@@ -189,6 +163,31 @@ namespace graphics_programming
                 $"{P21}, {P22}, {P23}, {P24},\n" +
                 $"{P31}, {P32}, {P33}, {P34},\n" +
                 $"{P41}, {P42}, {P43}, {P44}\n";
+        }
+
+        public bool Equals(Matrix4 other)
+        {
+            return (
+                other.P11 == P11 &&
+                other.P12 == P12 &&
+                other.P13 == P13 &&
+                other.P14 == P14 &&
+
+                other.P21 == P21 &&
+                other.P22 == P22 &&
+                other.P23 == P23 &&
+                other.P24 == P24 &&
+
+                other.P31 == P31 &&
+                other.P32 == P32 &&
+                other.P33 == P33 &&
+                other.P34 == P34 &&
+
+                other.P41 == P41 &&
+                other.P42 == P42 &&
+                other.P43 == P43 &&
+                other.P44 == P44
+            );
         }
 
         #endregion

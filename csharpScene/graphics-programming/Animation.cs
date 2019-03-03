@@ -33,7 +33,7 @@ namespace graphics_programming
             }
 
             values.CubeScale += .01F;
-            values.CameraThetaY--;
+            values.CameraThetaZ--;
         }
     }
 
@@ -48,7 +48,7 @@ namespace graphics_programming
             }
 
             values.CubeScale -= .01F;
-            values.CameraThetaY--;
+            values.CameraThetaZ--;
         }
     }
 
@@ -63,7 +63,7 @@ namespace graphics_programming
             }
 
             values.CubeThetaX++;
-            values.CameraThetaY--;
+            values.CameraThetaZ--;
         }
     }
 
@@ -78,7 +78,7 @@ namespace graphics_programming
             }
 
             values.CubeThetaX--;
-            values.CameraThetaY--;
+            values.CameraThetaZ--;
         }
     }
 
@@ -93,7 +93,7 @@ namespace graphics_programming
             }
 
             values.CubeThetaY++;
-            values.CameraThetaX++;
+            values.CameraThetaY++;
         }
     }
 
@@ -108,7 +108,7 @@ namespace graphics_programming
             }
 
             values.CubeThetaY--;
-            values.CameraThetaX++;
+            values.CameraThetaY++;
         }
     }
 
@@ -118,15 +118,15 @@ namespace graphics_programming
 
         public void Calculate(AnimationControl animationControl, CubeControlValues values)
         {
-            if (values.CameraThetaX == defaultValues.CameraThetaX && values.CameraThetaY == defaultValues.CameraThetaY) {
+            if (values.CameraThetaY == defaultValues.CameraThetaY && values.CameraThetaZ == defaultValues.CameraThetaZ) {
                animationControl.SetAnimation(new ScaleUp());
             }
 
-            if (values.CameraThetaX != defaultValues.CameraThetaX)
-                values.CameraThetaX += values.CameraThetaX < defaultValues.CameraThetaX ? 1F : -1F;
-
             if (values.CameraThetaY != defaultValues.CameraThetaY)
                 values.CameraThetaY += values.CameraThetaY < defaultValues.CameraThetaY ? 1F : -1F;
+
+            if (values.CameraThetaZ != defaultValues.CameraThetaZ)
+                values.CameraThetaZ += values.CameraThetaZ < defaultValues.CameraThetaZ ? 1F : -1F;
         }
     }
 

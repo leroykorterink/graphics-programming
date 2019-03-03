@@ -1,7 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
-using System.Dynamic;
 using System.Windows.Forms;
 
 namespace graphics_programming
@@ -13,19 +11,19 @@ namespace graphics_programming
         // Camera properties
         public float CameraR = 10;            // R / r
         public float CameraDistance = 800;    // D / d
-        public float CameraThetaX = -10;         // P / p
-        public float CameraThetaY = -100;      // T / t
+        public float CameraThetaY = -10;      // P / p
+        public float CameraThetaZ = -100;     // T / t
 
         // Cube properties
         public float CubeScale = 1;           // S / s
 
-        public float CubeX = 0;               // X / x
-        public float CubeY = 0;               // X / x
-        public float CubeZ = 0;               // X / x
+        public float CubeX = 0;               // Left / Right
+        public float CubeY = 0;               // Up / Down
+        public float CubeZ = 0;               // PageUp / PageDown
 
-        public float CubeThetaX = 0;          // ? / ?
-        public float CubeThetaY = 0;          // ? / ?
-        public float CubeThetaZ = 0;          // ? / ?
+        public float CubeThetaX = 0;          // X / x
+        public float CubeThetaY = 0;          // Y / y
+        public float CubeThetaZ = 0;          // Z / z
     }
 
     /// <summary>
@@ -68,7 +66,7 @@ namespace graphics_programming
         public OnChangeHandler OnChange;
 
         private readonly Brush _brush = new SolidBrush(Color.Black);
-        private readonly Font _font = new Font("Arial", 12, FontStyle.Bold);
+        private readonly Font _font = new Font("Arial", 9, FontStyle.Bold);
         private readonly Point _position = new Point(0, 0);
 
         private readonly Timer _timer;
@@ -100,6 +98,14 @@ namespace graphics_programming
 
                 case Keys.D:
                     Values.CameraDistance += e.Shift ? -5F : 5F;
+                    break;
+
+                case Keys.T:
+                    Values.CameraThetaZ += e.Shift ? -1F : 1F;
+                    break;
+
+                case Keys.P:
+                    Values.CameraThetaY += e.Shift ? -1F : 1F;
                     break;
 
                 #endregion
@@ -152,7 +158,7 @@ namespace graphics_programming
 
                 // Scale cube
                 case Keys.S:
-                    Values.CubeScale += e.Shift ? -1F : 1F;
+                    Values.CubeScale += e.Shift ? -0.01F : 0.01F;
                     break;
 
                 #endregion
@@ -166,6 +172,7 @@ namespace graphics_programming
 
                 // Toggle orthogonal rendering
                 case Keys.O:
+                    Values.CameraDistance = Values.IsOrthogonal ? 800 : 150;
                     Values.IsOrthogonal = !Values.IsOrthogonal;
                     break;
 
@@ -188,18 +195,18 @@ namespace graphics_programming
         public void Draw(Graphics graphics)
         {
             graphics.DrawString(
-                $"IsOrthogonal   = {Values.IsOrthogonal}\n" +
-                $"CameraR        = {Values.CameraR}\n" +
-                $"CameraDistance = {Values.CameraDistance}\n" +
-                $"CameraThetaX   = {Values.CameraThetaX}\n" +
-                $"CameraThetaY   = {Values.CameraThetaY}\n" +
-                $"CubeScale      = {Values.CubeScale}\n" +
-                $"CubeX          = {Values.CubeX}\n" +
-                $"CubeY          = {Values.CubeY}\n" +
-                $"CubeZ          = {Values.CubeZ}\n" +
-                $"CubeThetaX     = {Values.CubeThetaX}\n" +
-                $"CubeThetaY     = {Values.CubeThetaY}\n" +
-                $"CubeThetaZ     = {Values.CubeThetaZ}\n",
+                $"IsOrthogonal (o) \t\t\t = {Values.IsOrthogonal}\n" +
+                $"CameraR (R/r) \t\t\t\t = {Values.CameraR}\n" +
+                $"CameraDistance (D/d) \t\t\t = {Values.CameraDistance}\n" +
+                $"CameraThetaY (T/t) \t\t\t = {Values.CameraThetaY}\n" +
+                $"CameraThetaZ (P/p) \t\t\t = {Values.CameraThetaZ}\n" +
+                $"CubeScale (S/s) \t\t\t = {Values.CubeScale}\n" +
+                $"CubeX (X/x) \t\t\t\t = {Values.CubeX}\n" +
+                $"CubeY (Y/y) \t\t\t\t = {Values.CubeY}\n" +
+                $"CubeZ (Z/z) \t\t\t\t = {Values.CubeZ}\n" +
+                $"CubeThetaX (Left/Right) \t\t = {Values.CubeThetaX}\n" +
+                $"CubeThetaY (Up/Down) \t\t\t = {Values.CubeThetaY}\n" +
+                $"CubeThetaZ (PageUp/PageDown) \t = {Values.CubeThetaZ}\n",
                 _font, 
                 _brush, 
                 _position

@@ -3,7 +3,8 @@ using System.Windows.Forms;
 
 namespace graphics_programming
 {
-    public class Matrix3
+    #pragma warning disable CS0661, CS0660
+    public class Matrix3 : IEquatable<Matrix3>
     {
         public float P11 = 1;
         public float P12;
@@ -114,7 +115,7 @@ namespace graphics_programming
         /// <returns></returns>
         public static bool operator ==(Matrix3 m1, Matrix3 m2)
         {
-            return m2.Equals(m2);
+            return m1.Equals(m2);
         }
 
         /// <summary>
@@ -125,31 +126,12 @@ namespace graphics_programming
         /// <returns></returns>
         public static bool operator !=(Matrix3 m1, Matrix3 m2)
         {
-            return !m2.Equals(m2);
+            return !m1.Equals(m2);
         }
 
         #endregion
 
         #region overrides
-
-        public override bool Equals(object obj)
-        {
-            var matrix = (Matrix3)obj;
-
-            return (
-                matrix.P11 == P11 &&
-                matrix.P12 == P12 &&
-                matrix.P13 == P13 &&
-
-                matrix.P21 == P21 &&
-                matrix.P22 == P22 &&
-                matrix.P23 == P23 &&
-
-                matrix.P31 == P31 &&
-                matrix.P32 == P32 &&
-                matrix.P33 == P33
-            );
-        }
 
         public override string ToString()
         {
@@ -159,6 +141,22 @@ namespace graphics_programming
                 $"{P31}, {P32}, {P33}\n";
         }
 
+        public bool Equals(Matrix3 other)
+        {
+            return (
+                other.P11 == P11 &&
+                other.P12 == P12 &&
+                other.P13 == P13 &&
+
+                other.P21 == P21 &&
+                other.P22 == P22 &&
+                other.P23 == P23 &&
+
+                other.P31 == P31 &&
+                other.P32 == P32 &&
+                other.P33 == P33
+            );
+        }
 
         #endregion
     }
