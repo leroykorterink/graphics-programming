@@ -3,6 +3,7 @@
 #include <GL/freeglut.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "glsl.h"
 
@@ -18,6 +19,9 @@ const char * fragshader_name = "fragmentshader.fsh";
 const char * vertexshader_name = "vertexshader.vsh";
 unsigned const int DELTA = 10;
 
+glm::vec3 cameraPosition = glm::vec3(0.0, 0.0, 2);
+glm::vec3 cameraTarget = glm::vec3(0.0, 0.0, 0.0);
+glm::vec3 cameraUpPosition = glm::vec3(0.0, 1.0, 0.0);
 
 //--------------------------------------------------------------------------------
 // Variables
@@ -25,24 +29,10 @@ unsigned const int DELTA = 10;
 
 GLuint program_id;
 GLuint vao;
+GLuint uniform_mvp;
 
-struct VertexFormat
-{
-	glm::vec4 position;
-	glm::vec4 color;
-
-	VertexFormat(glm::vec4 &pos, glm::vec4 &col)
-	{
-		position = pos;
-		color = col;
-	}
-};
-
-VertexFormat triangle[] = {
-   VertexFormat(glm::vec4(0.5, -0.5, 0.0, 1.0), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)),
-   VertexFormat(glm::vec4(-0.5, -0.5, 0.0, 1.0), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)),
-   VertexFormat(glm::vec4(0.0, 0.5, 0.0, 1.0), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f))
-};
+glm::mat4 projection, model, view;
+glm::mat4 mvp;
 
 //--------------------------------------------------------------------------------
 // Mesh variables
@@ -50,17 +40,16 @@ VertexFormat triangle[] = {
 
 const GLfloat vertices[] =
 {
-	-0.5f, 0.5f, 0.0f, 0.5f,
-	0.5f, 0.5f, 0.0f, 0.5f,
-	-0.5f, -0.5f, 0.0f, 0.55f
+	0.5, -0.5, 0.0,
+	-0.5, -0.5, 0.0,
+	0.0, 0.5, 0.0
 };
 
 const GLfloat colors[] =
 {
-	1.0f, 0.0f, 0.0f, 0.0f,
-	0.0f, 1.0f, 0.0f, 0.0f,
-	0.0f, 0.0f, 1.0f, 0.0f,
-	0.0f, 0.0f, 0.0f, 1.0f
+	1.0f, 0.0f, 0.0f,
+	0.0f, 1.0f, 0.0f,
+	0.0f, 0.0f, 1.0f
 };
 
 
@@ -151,38 +140,84 @@ void InitShaders()
 void InitBuffers()
 {
 	GLuint position_id, color_id;
-	GLuint vbo;
+	GLuint vbo_vertices, vbo_colors;
 
-	// VBO for VertexFormat
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
+	// vbo for vertices
+	glGenBuffers(1, &vbo_vertices);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// vbo for colors
+	glGenBuffers(1, &vbo_colors);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	position_id = glGetAttribLocation(program_id, "position");
 	color_id = glGetAttribLocation(program_id, "color");
 
 	glGenVertexArrays(1, &vao);
+
 	glBindVertexArray(vao);
 
-	// Bind vertices and color to vao
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
 	// Bind vertices to vao
-	glVertexAttribPointer(position_id, 4, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), 0);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
+	glVertexAttribPointer(position_id, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(position_id);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// Bind colors to vao
-	glVertexAttribPointer(color_id, 4, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)(sizeof(glm::vec4)));
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
+	glVertexAttribPointer(color_id, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(color_id);
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 	glBindVertexArray(0);
+
+
+	//Make uniform vars
+	uniform_mvp = glGetUniformLocation(program_id, "mvp");
+
+	//Fill uniform variables
+	glUseProgram(program_id);
+	glUniformMatrix4fv(uniform_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
+
+
 }
+
+//------------------------------------------------------------
+// void InitMatrices()
+// Allocates and fills buffers
+//------------------------------------------------------------
+void InitMatrices()
+{
+	model = glm::mat4();
+
+	//Rotate Model (10 degrees)
+	model = glm::rotate(model, glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	view = glm::lookAt(
+		cameraPosition,
+		cameraTarget,
+		cameraUpPosition
+	);
+
+	projection = glm::perspective(
+		glm::radians(45.0f),
+		(1.0f * WIDTH) / HEIGHT,
+		0.1f,
+		20.0f);
+
+	mvp = projection * view * model;
+}
+
+
 
 
 int main(int argc, char ** argv)
 {
+	InitMatrices();
 	InitGlutGlew(argc, argv);
 	InitShaders();
 	InitBuffers();

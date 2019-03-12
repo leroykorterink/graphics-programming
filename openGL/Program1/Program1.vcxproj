@@ -96,6 +96,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cube.h" />
     <ClInclude Include="glsl.h" />
   </ItemGroup>
   <ItemGroup>
