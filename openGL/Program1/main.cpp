@@ -34,24 +34,51 @@ GLuint uniform_mvp;
 glm::mat4 projection, model, view;
 glm::mat4 mvp;
 
-//--------------------------------------------------------------------------------
-// Mesh variables
-//--------------------------------------------------------------------------------
+//------------------------------------------------------------
+// Variables for object
+//
+//           7----------6
+//          /|         /|
+//         / |        / |
+//        /  4-------/--5               y
+//       /  /       /  /                |
+//      3----------2  /                 ----x
+//      | /        | /                 /
+//      |/         |/                  z
+//      0----------1
+//------------------------------------------------------------
 
-const GLfloat vertices[] =
-{
-	0.5, -0.5, 0.0,
-	-0.5, -0.5, 0.0,
-	0.0, 0.5, 0.0
+GLfloat vertices[] = {
+	// front
+	-1.0, -1.0, 1.0,
+	1.0, -1.0, 1.0,
+	1.0, 1.0, 1.0,
+	-1.0, 1.0, 1.0,
+	// back
+	-1.0, -1.0, -1.0,
+	1.0, -1.0, -1.0,
+	1.0, 1.0, -1.0,
+	-1.0, 1.0, -1.0
 };
 
-const GLfloat colors[] =
-{
-	1.0f, 0.0f, 0.0f,
-	0.0f, 1.0f, 0.0f,
-	0.0f, 0.0f, 1.0f
+GLfloat colors[] = {
+	// front colors
+	1.0, 1.0, 0.0,
+	0.0, 1.0, 0.0,
+	0.0, 0.0, 1.0,
+	1.0, 1.0, 1.0,
+	// back colors
+	0.0, 1.0, 1.0,
+	1.0, 0.0, 1.0,
+	1.0, 0.0, 0.0,
+	1.0, 1.0, 0.0
 };
 
+GLushort cube_elements[] = {
+	0,1,1,2,2,3,3,0,  // front
+	0,4,1,5,3,7,2,6,  // front to back
+	4,5,5,6,6,7,7,4   //back
+};
 
 //--------------------------------------------------------------------------------
 // Keyboard handling
@@ -61,6 +88,32 @@ void keyboardHandler(unsigned char key, int a, int b)
 {
 	if (key == 27)
 		glutExit();
+}
+
+//------------------------------------------------------------
+// void UpdateMVP()
+//------------------------------------------------------------
+void UpdateMVP(float rotation)
+{
+	model = glm::mat4();
+
+	//Rotate Model (10 degrees)
+	model = glm::rotate(model, glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	view = glm::lookAt(
+		cameraPosition,
+		cameraTarget,
+		cameraUpPosition
+	);
+
+	projection = glm::perspective(
+		glm::radians(rotation),
+		(1.0f * WIDTH) / HEIGHT,
+		0.1f,
+		20.0f
+	);
+
+	mvp = projection * view * model;
 }
 
 
@@ -76,13 +129,18 @@ void Render()
 	glUseProgram(program_id);
 
 	glBindVertexArray(vao);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	
+	glDrawElements(
+		GL_LINES, 
+		sizeof(cube_elements) / sizeof(GLushort),
+		GL_UNSIGNED_SHORT, 
+		0
+	);
+
 	glBindVertexArray(0);
 
 	glutSwapBuffers();
 }
-
-
 
 //------------------------------------------------------------
 // void Render(int n)
@@ -91,6 +149,8 @@ void Render()
 
 void Render(int n)
 {
+	UpdateMVP(n % 360);
+
 	Render();
 	glutTimerFunc(DELTA, Render, 0);
 }
@@ -140,7 +200,7 @@ void InitShaders()
 void InitBuffers()
 {
 	GLuint position_id, color_id;
-	GLuint vbo_vertices, vbo_colors;
+	GLuint vbo_vertices, vbo_colors, ibo_elements;
 
 	// vbo for vertices
 	glGenBuffers(1, &vbo_vertices);
@@ -152,6 +212,12 @@ void InitBuffers()
 	glGenBuffers(1, &vbo_colors);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// vbo for elements
+	glGenBuffers(1, &ibo_elements);
+	glBindBuffer(GL_ARRAY_BUFFER, ibo_elements);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cube_elements), cube_elements, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	position_id = glGetAttribLocation(program_id, "position");
@@ -173,6 +239,9 @@ void InitBuffers()
 	glEnableVertexAttribArray(color_id);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+	// Bind elements to vao
+	glBindBuffer(GL_ARRAY_BUFFER, ibo_elements);
+
 	glBindVertexArray(0);
 
 
@@ -182,45 +251,17 @@ void InitBuffers()
 	//Fill uniform variables
 	glUseProgram(program_id);
 	glUniformMatrix4fv(uniform_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
-
-
 }
-
-//------------------------------------------------------------
-// void InitMatrices()
-// Allocates and fills buffers
-//------------------------------------------------------------
-void InitMatrices()
-{
-	model = glm::mat4();
-
-	//Rotate Model (10 degrees)
-	model = glm::rotate(model, glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-
-	view = glm::lookAt(
-		cameraPosition,
-		cameraTarget,
-		cameraUpPosition
-	);
-
-	projection = glm::perspective(
-		glm::radians(45.0f),
-		(1.0f * WIDTH) / HEIGHT,
-		0.1f,
-		20.0f);
-
-	mvp = projection * view * model;
-}
-
-
-
 
 int main(int argc, char ** argv)
 {
-	InitMatrices();
 	InitGlutGlew(argc, argv);
+	UpdateMVP(45.0f);
 	InitShaders();
 	InitBuffers();
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 
 	HWND hWnd = GetConsoleWindow();
 	ShowWindow(hWnd, SW_HIDE);
