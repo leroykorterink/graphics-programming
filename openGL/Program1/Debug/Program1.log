@@ -1,3 +1,2 @@
 ﻿  main.cpp
-c:\projects\g\graphics-programming\opengl\program1\main.cpp(152): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Program1.vcxproj -> C:\Projects\G\graphics-programming\openGL\Debug\Program1.exe

@@ -88,6 +88,7 @@
   <ItemGroup>
     <ClCompile Include="glsl.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="objloader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glsl.h" />
@@ -99,6 +100,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="objloader.hpp" />
     <ClInclude Include="vertexShader.vsh">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <FileType>Document</FileType>

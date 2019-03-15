@@ -1,11 +1,16 @@
 #include <iostream>
+#include <vector>
+
 #include <GL/glew.h>
 #include <GL/freeglut.h>
+
 #include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "glsl.h"
+#include "objloader.hpp"
 
 using namespace std;
 
@@ -19,9 +24,19 @@ const char * fragshader_name = "fragmentshader.fsh";
 const char * vertexshader_name = "vertexshader.vsh";
 unsigned const int DELTA = 10;
 
-glm::vec3 cameraPosition = glm::vec3(0.0, 0.0, 2);
-glm::vec3 cameraTarget = glm::vec3(0.0, 0.0, 0.0);
-glm::vec3 cameraUpPosition = glm::vec3(0.0, 1.0, 0.0);
+//--------------------------------------------------------------------------------
+// Structs
+//--------------------------------------------------------------------------------
+struct LightSource {
+	glm::vec3 position;
+};
+
+struct Material {
+	glm::vec3 ambientColor;
+	glm::vec3 diffuseColor;
+	glm::vec3 specular;
+	float power;
+};
 
 //--------------------------------------------------------------------------------
 // Variables
@@ -29,56 +44,20 @@ glm::vec3 cameraUpPosition = glm::vec3(0.0, 1.0, 0.0);
 
 GLuint program_id;
 GLuint vao;
-GLuint uniform_mvp;
+GLuint uniform_mv, uniform_proj, uniform_light_pos, uniform_material_ambient, uniform_material_diffuse, uniform_material_specular;
 
-glm::mat4 projection, model, view;
-glm::mat4 mvp;
+glm::mat4 model, view, projection;
+glm::mat4 mv;
 
-//------------------------------------------------------------
-// Variables for object
-//
-//           7----------6
-//          /|         /|
-//         / |        / |
-//        /  4-------/--5               y
-//       /  /       /  /                |
-//      3----------2  /                 ----x
-//      | /        | /                 /
-//      |/         |/                  z
-//      0----------1
-//------------------------------------------------------------
+LightSource lightSource;
+Material material;
 
-GLfloat vertices[] = {
-	// front
-	-1.0, -1.0, 1.0,
-	1.0, -1.0, 1.0,
-	1.0, 1.0, 1.0,
-	-1.0, 1.0, 1.0,
-	// back
-	-1.0, -1.0, -1.0,
-	1.0, -1.0, -1.0,
-	1.0, 1.0, -1.0,
-	-1.0, 1.0, -1.0
-};
-
-GLfloat colors[] = {
-	// front colors
-	1.0, 1.0, 0.0,
-	0.0, 1.0, 0.0,
-	0.0, 0.0, 1.0,
-	1.0, 1.0, 1.0,
-	// back colors
-	0.0, 1.0, 1.0,
-	1.0, 0.0, 1.0,
-	1.0, 0.0, 0.0,
-	1.0, 1.0, 0.0
-};
-
-GLushort cube_elements[] = {
-	0,1,1,2,2,3,3,0,  // front
-	0,4,1,5,3,7,2,6,  // front to back
-	4,5,5,6,6,7,7,4   //back
-};
+//--------------------------------------------------------------------------------
+// Mesh variables
+//--------------------------------------------------------------------------------
+vector<glm::vec3> vertices;
+vector<glm::vec3> normals;
+vector<glm::vec2> uvs;
 
 //--------------------------------------------------------------------------------
 // Keyboard handling
@@ -86,34 +65,8 @@ GLushort cube_elements[] = {
 
 void keyboardHandler(unsigned char key, int a, int b)
 {
-	if (key == 27)
-		glutExit();
-}
-
-//------------------------------------------------------------
-// void UpdateMVP()
-//------------------------------------------------------------
-void UpdateMVP(float rotation)
-{
-	model = glm::mat4();
-
-	//Rotate Model (10 degrees)
-	model = glm::rotate(model, glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-
-	view = glm::lookAt(
-		cameraPosition,
-		cameraTarget,
-		cameraUpPosition
-	);
-
-	projection = glm::perspective(
-		glm::radians(rotation),
-		(1.0f * WIDTH) / HEIGHT,
-		0.1f,
-		20.0f
-	);
-
-	mvp = projection * view * model;
+    if (key == 27)
+        glutExit();
 }
 
 
@@ -123,24 +76,26 @@ void UpdateMVP(float rotation)
 
 void Render()
 {
-	glClearColor(0.0, 0.0, 0.0, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glUseProgram(program_id);
+    // Send vao
+    glBindVertexArray(vao);
+	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+    glBindVertexArray(0);
 
-	glBindVertexArray(vao);
-	
-	glDrawElements(
-		GL_LINES, 
-		sizeof(cube_elements) / sizeof(GLushort),
-		GL_UNSIGNED_SHORT, 
-		0
-	);
+    // Do transformation
+    model = glm::rotate(model, 0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
+    mv = view * model;
 
-	glBindVertexArray(0);
+    // Send mvp
+    glUseProgram(program_id);
+    glUniformMatrix4fv(uniform_mv, 1, GL_FALSE, glm::value_ptr(mv));
 
-	glutSwapBuffers();
+    glutSwapBuffers();
 }
+
+
 
 //------------------------------------------------------------
 // void Render(int n)
@@ -149,10 +104,8 @@ void Render()
 
 void Render(int n)
 {
-	UpdateMVP(n % 360);
-
-	Render();
-	glutTimerFunc(DELTA, Render, 0);
+    Render();
+    glutTimerFunc(DELTA, Render, 0);
 }
 
 
@@ -163,15 +116,15 @@ void Render(int n)
 
 void InitGlutGlew(int argc, char **argv)
 {
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutInitWindowSize(WIDTH, HEIGHT);
-	glutCreateWindow("Hello OpenGL");
-	glutDisplayFunc(Render);
-	glutKeyboardFunc(keyboardHandler);
-	glutTimerFunc(DELTA, Render, 0);
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+    glutInitWindowSize(WIDTH, HEIGHT);
+    glutCreateWindow("Hello OpenGL");
+    glutDisplayFunc(Render);
+    glutKeyboardFunc(keyboardHandler);
+    glutTimerFunc(DELTA, Render, 0);
 
-	glewInit();
+    glewInit();
 }
 
 
@@ -182,15 +135,69 @@ void InitGlutGlew(int argc, char **argv)
 
 void InitShaders()
 {
-	char * vertexshader = glsl::readFile(vertexshader_name);
-	GLuint vsh_id = glsl::makeVertexShader(vertexshader);
+    char * vertexshader = glsl::readFile(vertexshader_name);
+    GLuint vsh_id = glsl::makeVertexShader(vertexshader);
 
-	char * fragshader = glsl::readFile(fragshader_name);
-	GLuint fsh_id = glsl::makeFragmentShader(fragshader);
+    char * fragshader = glsl::readFile(fragshader_name);
+    GLuint fsh_id = glsl::makeFragmentShader(fragshader);
 
-	program_id = glsl::makeShaderProgram(vsh_id, fsh_id);
+    program_id = glsl::makeShaderProgram(vsh_id, fsh_id);
 }
 
+
+//------------------------------------------------------------
+// void InitMatrices()
+//------------------------------------------------------------
+
+void InitMatrices()
+{
+    model = glm::mat4();
+
+    view = glm::lookAt(
+        glm::vec3(0.0, 2.0, 4.0),
+        glm::vec3(0.0, 0.5, 0.0),
+        glm::vec3(0.0, 1.0, 0.0));
+
+	mv = model * view;
+
+	projection = glm::perspective(
+        glm::radians(45.0f),
+        1.0f * WIDTH / HEIGHT, 0.1f,
+        20.0f
+	);
+}
+
+void InitMaterial() 
+{
+	lightSource.position = glm::vec3(4, 4, 4);
+	material.ambientColor = glm::vec3(0.2, 0.2, 0.2);
+	material.diffuseColor = glm::vec3(0.5, 0.5, 0.5);
+	material.specular = glm::vec3(1.0);
+	material.power = 123;
+}
+
+void CreateLights()
+{
+	InitMaterial();
+
+	// Make uniform vars
+	uniform_mv = glGetUniformLocation(program_id, "mv");
+	uniform_proj = glGetUniformLocation(program_id, "projection");
+	uniform_light_pos = glGetUniformLocation(program_id, "lightPosition");
+	uniform_material_ambient = glGetUniformLocation(program_id, "materiaAmbient");
+	uniform_material_diffuse = glGetUniformLocation(program_id,"materialDiffuse");
+	uniform_material_specular = glGetUniformLocation(program_id, "materialSpecular");
+
+	// Fill uniform vars
+	glUseProgram(program_id);
+	glUniformMatrix4fv(uniform_mv, 1, GL_FALSE, glm::value_ptr(mv));
+	glUniformMatrix4fv(uniform_proj, 1, GL_FALSE, glm::value_ptr(projection));
+	glUniform3fv(uniform_light_pos, 1, glm::value_ptr(lightSource.position));
+	glUniform3fv(uniform_material_ambient, 1, glm::value_ptr(material.ambientColor));
+	glUniform3fv(uniform_material_diffuse, 1, glm::value_ptr(material.diffuseColor));
+	glUniform3fv(uniform_material_specular, 1, glm::value_ptr(material.specular));
+
+}
 
 //------------------------------------------------------------
 // void InitBuffers()
@@ -199,74 +206,71 @@ void InitShaders()
 
 void InitBuffers()
 {
-	GLuint position_id, color_id;
-	GLuint vbo_vertices, vbo_colors, ibo_elements;
+    GLuint position_id, normal_id;
+    GLuint vbo_vertices, vbo_normals;
 
-	// vbo for vertices
-	glGenBuffers(1, &vbo_vertices);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	CreateLights();
+
+    // vbo for vertices
+    glGenBuffers(1, &vbo_vertices);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	// vbo for colors
-	glGenBuffers(1, &vbo_colors);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+	// vbo for normals
+	glGenBuffers(1, &vbo_normals);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_normals);
+	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	// vbo for elements
-	glGenBuffers(1, &ibo_elements);
-	glBindBuffer(GL_ARRAY_BUFFER, ibo_elements);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cube_elements), cube_elements, GL_STATIC_DRAW);
+    // Get vertex attributes
+    position_id = glGetAttribLocation(program_id, "position");
+	normal_id = glGetAttribLocation(program_id, "normal");
+
+    // Allocate memory for vao
+    glGenVertexArrays(1, &vao);
+
+    // Bind to vao
+    glBindVertexArray(vao);
+
+    // Bind vertices to vao
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
+    glVertexAttribPointer(position_id, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(position_id);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// Bind normals to vao
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_normals);
+	glVertexAttribPointer(normal_id, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(normal_id);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	position_id = glGetAttribLocation(program_id, "position");
-	color_id = glGetAttribLocation(program_id, "color");
-
-	glGenVertexArrays(1, &vao);
-
-	glBindVertexArray(vao);
-
-	// Bind vertices to vao
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
-	glVertexAttribPointer(position_id, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(position_id);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	// Bind colors to vao
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
-	glVertexAttribPointer(color_id, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(color_id);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	// Bind elements to vao
-	glBindBuffer(GL_ARRAY_BUFFER, ibo_elements);
-
-	glBindVertexArray(0);
+    
+    // Stop bind to vao
+    glBindVertexArray(0);
+}
 
 
-	//Make uniform vars
-	uniform_mvp = glGetUniformLocation(program_id, "mvp");
-
-	//Fill uniform variables
-	glUseProgram(program_id);
-	glUniformMatrix4fv(uniform_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
+void InitObjects()
+{
+	bool res = loadOBJ("teapot.obj", vertices, uvs, normals);
 }
 
 int main(int argc, char ** argv)
 {
-	InitGlutGlew(argc, argv);
-	UpdateMVP(45.0f);
+    InitGlutGlew(argc, argv);
+	InitObjects();
 	InitShaders();
-	InitBuffers();
+    InitMatrices();
+    InitBuffers();
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
 
-	HWND hWnd = GetConsoleWindow();
-	ShowWindow(hWnd, SW_HIDE);
+    HWND hWnd = GetConsoleWindow();
+    ShowWindow(hWnd, SW_HIDE);
 
-	glutMainLoop();
+    glutMainLoop();
 
-	return 0;
+    return 0;
 }
