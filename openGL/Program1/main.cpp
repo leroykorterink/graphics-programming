@@ -35,7 +35,7 @@ struct Material {
 	glm::vec3 ambientColor;
 	glm::vec3 diffuseColor;
 	glm::vec3 specular;
-	float power;
+	GLfloat power;
 };
 
 //--------------------------------------------------------------------------------
@@ -44,7 +44,8 @@ struct Material {
 
 GLuint program_id;
 GLuint vao;
-GLuint uniform_mv, uniform_proj, uniform_light_pos, uniform_material_ambient, uniform_material_diffuse, uniform_material_specular;
+GLuint uniform_mv, uniform_proj, uniform_light_pos, uniform_material_ambient, uniform_material_diffuse, 
+uniform_material_specular, uniform_material_power;
 
 glm::mat4 model, view, projection;
 glm::mat4 mv;
@@ -187,6 +188,7 @@ void CreateLights()
 	uniform_material_ambient = glGetUniformLocation(program_id, "materiaAmbient");
 	uniform_material_diffuse = glGetUniformLocation(program_id,"materialDiffuse");
 	uniform_material_specular = glGetUniformLocation(program_id, "materialSpecular");
+	uniform_material_power = glGetUniformLocation(program_id, "materialPower");
 
 	// Fill uniform vars
 	glUseProgram(program_id);
@@ -196,7 +198,7 @@ void CreateLights()
 	glUniform3fv(uniform_material_ambient, 1, glm::value_ptr(material.ambientColor));
 	glUniform3fv(uniform_material_diffuse, 1, glm::value_ptr(material.diffuseColor));
 	glUniform3fv(uniform_material_specular, 1, glm::value_ptr(material.specular));
-
+	glUniform1f(uniform_material_power, material.power);
 }
 
 //------------------------------------------------------------
