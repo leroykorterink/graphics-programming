@@ -1,4 +1,5 @@
 #include "glsl.h"
+#include <iostream>
 
 char* glsl::contents;
 
@@ -28,18 +29,21 @@ bool glsl::compiledStatus(GLint shaderID)
 {
 	GLint compiled = 0;
 	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &compiled);
+
 	if (compiled) {
 		return true;
 	}
-	else {
-		GLint logLength;
-		glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &logLength);
-		char* msgBuffer = new char[logLength];
-		glGetShaderInfoLog(shaderID, logLength, NULL, msgBuffer);
-		printf("%s\n", msgBuffer);
-		delete (msgBuffer);
-		return false;
-	}
+
+	GLint logLength;
+	glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &logLength);
+
+	char* msgBuffer = new char[logLength];
+	glGetShaderInfoLog(shaderID, logLength, NULL, msgBuffer);
+
+	std::cout << msgBuffer << std::endl;
+
+	delete msgBuffer;
+	return false;
 }
 
 GLuint glsl::makeVertexShader(const char* shaderSource)
@@ -48,10 +52,12 @@ GLuint glsl::makeVertexShader(const char* shaderSource)
 	glShaderSource(vertexShaderID, 1, (const GLchar**)&shaderSource, NULL);
 	glCompileShader(vertexShaderID);
 	bool compiledCorrectly = compiledStatus(vertexShaderID);
+	
 	if (compiledCorrectly)
 	{
 		return vertexShaderID;
 	}
+
 	return -1;
 }
 

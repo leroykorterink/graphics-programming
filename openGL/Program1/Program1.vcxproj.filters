@@ -21,20 +21,67 @@
     <ClCompile Include="glsl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="fragmentShader.fsh">
-      <Filter>Resource Files</Filter>
-    </None>
+    <ClCompile Include="Object3d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="objloader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glsl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Object3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="objloader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="texture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="vertexShader.vsh">
+    <None Include="shaders\fragmentShader.glsl">
       <Filter>Resource Files</Filter>
-    </FxCompile>
+    </None>
+    <None Include="shaders\vertexShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="assets\box.obj">
+      <Filter>Resource Files</Filter>
+    </Object>
+    <Object Include="assets\cylinder18.obj">
+      <Filter>Resource Files</Filter>
+    </Object>
+    <Object Include="assets\cylinder32.obj">
+      <Filter>Resource Files</Filter>
+    </Object>
+    <Object Include="assets\sphere.obj">
+      <Filter>Resource Files</Filter>
+    </Object>
+    <Object Include="assets\teapot.obj">
+      <Filter>Resource Files</Filter>
+    </Object>
+    <Object Include="assets\torus.obj">
+      <Filter>Resource Files</Filter>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\uv_map.DDS">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\uv_template.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\yellow_brick.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
