@@ -55,7 +55,3 @@ void Object3d::Init(GLuint programId, GLuint* vertexArrayObject)
 	// Stop bind to vao
 	glBindVertexArray(0);
 }
-
-void Object3d::Update()
-{
-}

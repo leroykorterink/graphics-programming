@@ -1,10 +1,8 @@
-#include <iostream>
 #include <vector>
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
-#include <glm/glm.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -40,7 +38,7 @@ struct Material {
 //--------------------------------------------------------------------------------
 // Variables
 //--------------------------------------------------------------------------------
-Object3d* myObj;
+std::vector<Object3d> myObjects;
 
 GLuint program_id;
 GLuint vao;
@@ -63,6 +61,35 @@ void keyboardHandler(unsigned char key, int a, int b)
         glutExit();
 }
 
+/**
+ * Draws all objects
+ */
+void DrawObjects(std::vector<Object3d> objects)
+{
+	glBindVertexArray(vao);
+
+	// Loop trough vector to draw all triangles in vao
+	using ConstIterator = std::vector<Object3d>::const_iterator;
+
+	for (ConstIterator it = objects.begin(); it != objects.end(); ++it)
+	{
+		glDrawArrays(GL_TRIANGLES, 0, it->vertices.size());
+	}
+
+	glBindVertexArray(0);
+}
+
+void InitObjects(std::vector<Object3d> objects)
+{
+	// Initialize the objects
+	using Iterator = std::vector<Object3d>::iterator;
+
+	for (Iterator it = objects.begin(); it != objects.end(); ++it)
+	{
+		it->Init(program_id, &vao);
+	}
+}
+
 
 //--------------------------------------------------------------------------------
 // Rendering
@@ -75,7 +102,7 @@ void Render()
 
     // Send vao
     glBindVertexArray(vao);
-	glDrawArrays(GL_TRIANGLES, 0, myObj->vertices.size());
+	DrawObjects(myObjects);
     glBindVertexArray(0);
 
     // Do transformation
@@ -207,8 +234,11 @@ int main(int argc, char ** argv)
     InitMatrices();
 	CreateLights();
 
-	myObj = new Object3d("assets/box.obj", "");
-	myObj->Init(program_id, &vao);
+	myObjects = std::vector<Object3d>{
+		Object3d("assets/box.obj", "assets/yellow_brick.bmp")
+	};
+
+	InitObjects(myObjects);
 
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);

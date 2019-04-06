@@ -14,8 +14,6 @@ public:
 	GLuint textureId;
 
 	Object3d(char* modelPath, char* texturePath);
-	~Object3d();
 
 	void Init(GLuint programId, GLuint* vertexArrayObject);
-	void Update();
 };
