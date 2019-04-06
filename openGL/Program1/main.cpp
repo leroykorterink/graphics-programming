@@ -20,8 +20,8 @@ using namespace std;
 //--------------------------------------------------------------------------------
 
 const int WIDTH = 800, HEIGHT = 600;
-const char * fragshader_name = "fragmentshader.fsh";
-const char * vertexshader_name = "vertexshader.vsh";
+const char * fragshader_name = "shaders/fragmentshader.glsl";
+const char * vertexshader_name = "shaders/vertexshader.glsl";
 unsigned const int DELTA = 10;
 
 //--------------------------------------------------------------------------------
@@ -255,7 +255,7 @@ void InitBuffers()
 
 void InitObjects()
 {
-	bool res = loadOBJ("teapot.obj", vertices, uvs, normals);
+	bool res = loadOBJ("assets/teapot.obj", vertices, uvs, normals);
 }
 
 int main(int argc, char ** argv)

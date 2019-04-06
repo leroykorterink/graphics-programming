@@ -29,14 +29,36 @@
     <ClInclude Include="glsl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vertexShader.vsh">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="fragmentShader.fsh">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
     <ClInclude Include="objloader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\fragmentShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\vertexShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="assets\box.obj">
+      <Filter>Resource Files</Filter>
+    </Object>
+    <Object Include="assets\cylinder18.obj">
+      <Filter>Resource Files</Filter>
+    </Object>
+    <Object Include="assets\cylinder32.obj">
+      <Filter>Resource Files</Filter>
+    </Object>
+    <Object Include="assets\sphere.obj">
+      <Filter>Resource Files</Filter>
+    </Object>
+    <Object Include="assets\teapot.obj">
+      <Filter>Resource Files</Filter>
+    </Object>
+    <Object Include="assets\torus.obj">
+      <Filter>Resource Files</Filter>
+    </Object>
   </ItemGroup>
 </Project>
