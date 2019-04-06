@@ -105,6 +105,7 @@ bool loadOBJ(
 	
 	}
 
+	printf("File loaded succesfully");
 	return true;
 }
 

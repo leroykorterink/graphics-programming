@@ -88,12 +88,14 @@
   <ItemGroup>
     <ClCompile Include="glsl.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Object3d.cpp" />
     <ClCompile Include="objloader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glsl.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Object3d.h" />
     <ClInclude Include="objloader.hpp" />
   </ItemGroup>
   <ItemGroup>

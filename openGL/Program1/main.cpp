@@ -12,8 +12,7 @@
 #include "glsl.h"
 #include "objloader.hpp"
 
-using namespace std;
-
+#include "Object3d.h"
 
 //--------------------------------------------------------------------------------
 // Consts
@@ -41,6 +40,7 @@ struct Material {
 //--------------------------------------------------------------------------------
 // Variables
 //--------------------------------------------------------------------------------
+Object3d* myObj;
 
 GLuint program_id;
 GLuint vao;
@@ -52,13 +52,6 @@ glm::mat4 mv;
 
 LightSource lightSource;
 Material material;
-
-//--------------------------------------------------------------------------------
-// Mesh variables
-//--------------------------------------------------------------------------------
-vector<glm::vec3> vertices;
-vector<glm::vec3> normals;
-vector<glm::vec2> uvs;
 
 //--------------------------------------------------------------------------------
 // Keyboard handling
@@ -82,7 +75,7 @@ void Render()
 
     // Send vao
     glBindVertexArray(vao);
-	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+	glDrawArrays(GL_TRIANGLES, 0, myObj->vertices.size());
     glBindVertexArray(0);
 
     // Do transformation
@@ -205,72 +198,23 @@ void CreateLights()
 // void InitBuffers()
 // Allocates and fills buffers
 //------------------------------------------------------------
-
-void InitBuffers()
-{
-    GLuint position_id, normal_id;
-    GLuint vbo_vertices, vbo_normals;
-
-	CreateLights();
-
-    // vbo for vertices
-    glGenBuffers(1, &vbo_vertices);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	// vbo for normals
-	glGenBuffers(1, &vbo_normals);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_normals);
-	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    // Get vertex attributes
-    position_id = glGetAttribLocation(program_id, "position");
-	normal_id = glGetAttribLocation(program_id, "normal");
-
-    // Allocate memory for vao
-    glGenVertexArrays(1, &vao);
-
-    // Bind to vao
-    glBindVertexArray(vao);
-
-    // Bind vertices to vao
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
-    glVertexAttribPointer(position_id, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(position_id);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	// Bind normals to vao
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_normals);
-	glVertexAttribPointer(normal_id, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(normal_id);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    
-    // Stop bind to vao
-    glBindVertexArray(0);
-}
-
-
-void InitObjects()
-{
-	bool res = loadOBJ("assets/teapot.obj", vertices, uvs, normals);
-}
-
 int main(int argc, char ** argv)
 {
     InitGlutGlew(argc, argv);
-	InitObjects();
+	
+
 	InitShaders();
     InitMatrices();
-    InitBuffers();
+	CreateLights();
+
+	myObj = new Object3d("assets/box.obj", "");
+	myObj->Init(program_id, &vao);
 
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
 
     HWND hWnd = GetConsoleWindow();
-    ShowWindow(hWnd, SW_HIDE);
+    ShowWindow(hWnd, SW_SHOW);
 
     glutMainLoop();
 
