@@ -22,16 +22,13 @@ Object3d::~Object3d()
 {
 }
 
-void Object3d::Init(GLuint &programId, GLuint &vertexArrayObjectId)
+void Object3d::Init(const GLuint programId, GLuint vertexArrayObject)
 {
-	GLuint position_id, normal_id, uv_id;
-	GLuint vbo_vertices, vbo_normals, vbo_uvs;
-
-	// vbo for texture
-	glGenBuffers(1, &vbo_uvs);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_uvs);
-	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	GLuint 
+		position_id, 
+		normal_id, 
+		vbo_vertices, 
+		vbo_normals;
 
 	// vbo for vertices
 	glGenBuffers(1, &vbo_vertices);
@@ -46,21 +43,14 @@ void Object3d::Init(GLuint &programId, GLuint &vertexArrayObjectId)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// Get vertex attributes
-	uv_id = glGetAttribLocation(programId, "uv");
 	position_id = glGetAttribLocation(programId, "position");
 	normal_id = glGetAttribLocation(programId, "normal");
 
 	// Allocate memory for vao
-	glGenVertexArrays(1, &vertexArrayObjectId);
+	glGenVertexArrays(1, &vertexArrayObject);
 
 	// Bind to vao
-	glBindVertexArray(vertexArrayObjectId);
-
-	// Bind textures to vao
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_uvs);
-	glVertexAttribPointer(uv_id, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(uv_id);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(vertexArrayObject);
 
 	// Bind vertices to vao
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
@@ -74,7 +64,7 @@ void Object3d::Init(GLuint &programId, GLuint &vertexArrayObjectId)
 	glEnableVertexAttribArray(normal_id);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	// Clear bind to vao
+	// Stop bind to vao
 	glBindVertexArray(0);
 }
 
