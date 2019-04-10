@@ -86,23 +86,41 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Box.cpp" />
     <ClCompile Include="glsl.cpp" />
+    <ClCompile Include="src\lib\Shader.cpp" />
+    <ClCompile Include="src\lib\IndexBuffer.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Object3d.cpp" />
+    <ClCompile Include="MaterialProperties.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="objloader.cpp" />
+    <ClCompile Include="src\lib\Renderer.cpp" />
+    <ClCompile Include="src\lib\VertexBuffer.cpp" />
+    <ClCompile Include="src\lib\VertexArray.cpp" />
+    <ClCompile Include="src\lib\Texture.cpp" />
+    <ClCompile Include="src\vendor\texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Box.h" />
     <ClInclude Include="glsl.h" />
+    <ClInclude Include="src\lib\Shader.h" />
+    <ClInclude Include="src\lib\IndexBuffer.h" />
+    <ClInclude Include="src\lib\Renderer.h" />
+    <ClInclude Include="src\lib\VertexBuffer.h" />
+    <ClInclude Include="src\lib\VertexArray.h" />
+    <ClInclude Include="src\lib\VertexBufferLayout.h" />
+    <ClInclude Include="src\lib\Texture.h" />
+    <ClInclude Include="src\vendor\texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Object3d.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="objloader.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\fragmentShader.glsl">
+    <None Include="src\shaders\fragmentShader.glsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="shaders\vertexShader.glsl">
+    <None Include="src\shaders\vertexShader.glsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </None>
   </ItemGroup>
